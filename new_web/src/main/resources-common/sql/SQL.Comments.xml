@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.dao.CommentsDao"> <!-- DAO 구현체 -->
+
+	<!-- 해당 게시글의 댓글 가져오기 -->
+	<select id="getComment" resultType="Comments">
+		SELECT comment_seq, comment_doc_seq, user_id, comment, nickname, DATE_FORMAT(write_date, '%Y-%m-%d %H:%i') as write_date
+		FROM iot.comments
+		WHERE comment_doc_seq = #{commentDocSeq}
+	</select>
+	
+	<delete id="deleteAll" parameterType="int">
+		DELETE FROM iot.comments WHERE comment_doc_seq = #{commentDocSeq}
+	</delete>
+	
+	<insert id="write" parameterType="Comments" >
+		INSERT INTO iot.comments
+		(comment_doc_seq, user_id, comment, nickname, write_date)
+		VALUES 
+		(#{commentDocSeq}, #{userId}, #{comment}, #{nickname}, now())
+	</insert>
+	
+	<delete id="delete" parameterType="int">
+		DELETE FROM iot.comments WHERE comment_seq = #{commentSeq}
+	</delete>
+</mapper>

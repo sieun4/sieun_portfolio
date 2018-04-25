@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.dao.FreeBoardDao"> <!-- DAO 구현체 -->
+
+	<!-- 페이징을 위해 자유게시판 글 갯수 카운트 -->
+	<select id="count" resultType="int">
+		SELECT COUNT(*) FROM iot.free_board
+		WHERE 1=1
+		<if
+			test="(searchType != null and searchType == 'all') and searchText != ''">
+			AND (user_id LIKE CONCAT('%', #{searchText}, '%')
+			OR nickname LIKE CONCAT('%', #{searchText}, '%')
+			OR title LIKE CONCAT('%', #{searchText}, '%')
+			OR contents LIKE CONCAT('%', #{searchText}, '%'))
+		</if>
+		<if
+			test="(searchType != null and searchType == 'userId') and searchText != ''">
+			AND user_id LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if
+			test="(searchType != null and searchType == 'nickname') and searchText != ''">
+			AND nickname LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if
+			test="(searchType != null and searchType == 'title') and searchText != ''">
+			AND title LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if
+			test="(searchType != null and searchType == 'contents') and searchText != ''">
+			AND contents LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+	</select>
+
+	<!-- 페이지별 게시글 정보 불러오기 -->
+	<select id="paging" parameterType="HashMap" resultType="HashMap">
+		SELECT seq, user_id, nickname, title, contents,
+		DATE_FORMAT(write_date, '%Y-%m-%d %H:%i') as write_date, hits,
+		update_date, has_file, has_comment
+		FROM iot.free_board
+		WHERE 1=1
+		<if
+			test="(searchType != null and searchType == 'all') and searchText != ''">
+			AND (user_id LIKE CONCAT('%', #{searchText}, '%')
+			OR nickname LIKE CONCAT('%', #{searchText}, '%')
+			OR title LIKE CONCAT('%', #{searchText}, '%')
+			OR contents LIKE CONCAT('%', #{searchText}, '%'))
+		</if>
+		<if
+			test="(searchType != null and searchType == 'userId') and searchText != ''">
+			AND user_id LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if
+			test="(searchType != null and searchType == 'nickname') and searchText != ''">
+			AND nickname LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if
+			test="(searchType != null and searchType == 'title') and searchText != ''">
+			AND title LIKE CONCAT('%', #{searchText}, '%')
+			<!-- '%#{searchText%}' 로 쓰면 '%'#{searchText'%}'가 되기 때문에 concat 사용 -->
+			<!-- AND title LIKE '%검색어%' %는 문자 / 검색어가 포함된 -->
+			<!-- AND title LIKE '검색어%' %는 문자 / 검색어로 시작된 -->
+			<!-- AND title LIKE '%검색어' %는 문자 / 검색어로 끝난 -->
+		</if>
+		<if
+			test="(searchType != null and searchType == 'contents') and searchText != ''">
+			AND contents LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		ORDER BY seq DESC
+		LIMIT #{startArticleNo}, #{pageArticle}
+		<!-- 매개변수를 (int startArticleNo, int pageArticle)로 받았을 경우 #{0}, #{1} -->
+		<!-- 쿼리가 길어지면 0, 1, 2, 3... 으로 알아보기 어렵기 때문에 주로 HashMap으로 받아서 씀 -->
+	</select>
+
+	<update id="updateHits" parameterType="int">
+		UPDATE iot.free_board SET
+		hits = hits + 1 WHERE seq = #{seq}
+	</update>
+
+	<select id="findBySeq" resultType="FreeBoard">
+		SELECT seq, user_id, nickname,
+		title, contents, DATE_FORMAT(write_date, '%Y-%m-%d %H:%i') as
+		write_date, hits, update_date, has_file, has_comment
+		FROM iot.free_board WHERE seq = #{seq}
+	</select>
+
+	<insert id="write" parameterType="FreeBoard" useGeneratedKeys="true">
+		<!-- PK가 자동 생성됨 -->
+		INSERT INTO iot.free_board(user_id, nickname, title, contents,
+		has_file, write_date)
+		VALUES (#{userId}, #{nickname}, #{title}, #{contents}, #{hasFile}, now())
+		<!-- keyProperty="컬럼명" -->
+		<selectKey resultType="int" keyProperty="seq" order="AFTER">
+			SELECT LAST_INSERT_ID()	<!-- 마지막에 넣은 seq 가져오기 -->
+		</selectKey>
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM iot.free_board
+		WHERE seq = #{seq}
+	</delete>
+
+	<update id="update" parameterType="FreeBoard">
+		UPDATE iot.free_board
+		SET title = #{title}, contents = #{contents}, has_file = #{hasFile}
+		WHERE seq = #{seq}
+	</update>
+	
+	<update id="writeHasCo" parameterType="int">
+		UPDATE iot.free_board
+		SET has_comment = has_comment + 1
+		WHERE seq = #{seq}	
+	</update>
+	
+	<update id="delHasCo" parameterType="int">
+		UPDATE iot.free_board
+		SET has_comment = has_comment - 1
+		WHERE seq = #{seq}	
+	</update>
+</mapper>

@@ -1,0 +1,290 @@
+package com.iot.controller;
+
+import java.util.HashMap;
+
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+
+import com.iot.dto.Letter;
+import com.iot.dto.User;
+import com.iot.service.LetterService;
+import com.iot.service.UserService;
+
+@Controller
+public class UserController {
+
+	private Logger log = Logger.getLogger(UserController.class);
+
+	@Autowired
+	UserService service;
+	
+	@Autowired
+	LetterService lService;
+
+	@RequestMapping("/goLogin.do")
+	public ModelAndView index(HttpSession session) {
+		ModelAndView mv = new ModelAndView();
+
+		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
+
+			mv.setViewName("error/error");
+			mv.addObject("msg", "이미 로그인 하셨습니다 :)");
+			mv.addObject("nextLocation", "/index.do");
+			return mv;
+		}											
+		mv.setViewName("user/login");					// 로그인 페이지로
+		return mv;
+	}
+
+	@RequestMapping("/doLogin.do")
+	public ModelAndView doLogin(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("login.do - params : " + params);
+		ModelAndView mv = new ModelAndView();
+
+		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
+
+			mv.setViewName("error/error");
+			mv.addObject("msg", "이미 로그인 하셨습니다 :)");
+			mv.addObject("nextLocation", "/index.do");
+			return mv;
+		}
+
+		String userId = params.get("userId");
+		String comparePw = params.get("password");
+
+		try {	// 비밀번호 확인 메서드 호출
+			if (service.comparePw(userId, comparePw)) { // 비밀번호 일치
+				User user = service.getUser(userId);
+				// session은 request보다 넓은 영역
+				// session은 페이지 이동이 상관 없음
+				session.setAttribute("userId", user.getUserId());
+				session.setAttribute("isAdmin", user.getIsAdmin());
+				session.setAttribute("nickname", user.getNickname());
+				RedirectView rv = new RedirectView("/new_web/index.do");
+				mv.setView(rv);
+
+			} else { // 비밀번호 불일치
+				mv.setViewName("error/error");
+				mv.addObject("msg", "비밀번호가 일치하지 않습니다.");
+				mv.addObject("nextLocation", "/goLogin.do");
+				return mv;
+			}
+		} catch (Exception e) {
+			switch (e.getMessage()) {
+			case "NOT_FOUND_USER_ID":
+				mv.setViewName("error/error");
+				mv.addObject("msg", "존재하지 않는 ID입니다.");
+				mv.addObject("nextLocation", "/goLogin.do");
+				return mv;
+			}
+		}
+		return mv;
+	}
+
+	@RequestMapping("/logout.do")
+	public ModelAndView logout(HttpSession session) {
+		ModelAndView mv = new ModelAndView();
+
+		if (session.getAttribute("userId") == null) { 	// 로그인 하지 않은 경우	
+			mv.setViewName("error/error");
+			mv.addObject("msg", "로그인 후 이용해주세요 :)");
+			mv.addObject("nextLocation", "/goLogin.do");
+			return mv;
+		}		
+
+		session.invalidate(); // 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
+		RedirectView rv = new RedirectView("/new_web/goLogin.do");
+		mv.setView(rv);
+		return mv;
+	}
+
+	@RequestMapping("/goJoin.do")
+	public ModelAndView goJoin(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/goJoin.do - params : " + params); // 파라미터 출력해보기
+		ModelAndView mv = new ModelAndView();
+
+		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("msg", "회원가입은 로그아웃 후 이용해주세요 :)");
+			mv.addObject("nextLocation", "/index.do");
+			return mv;
+		}							
+
+		mv.setViewName("user/join");	// 로그인 안 한 경우 회원가입 페이지로
+		return mv;
+	}
+
+	@RequestMapping("/doJoin.do")
+	public ModelAndView doJoin(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/doJoin.do - params : " + params); // 파라미터 출력해보기
+		ModelAndView mv = new ModelAndView();
+
+		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("msg", "회원가입은 로그아웃 후 이용해주세요 :)");
+			mv.addObject("nextLocation", "/index.do");
+			return mv;
+		}	
+
+		User user = new User();
+		user.setUserId(params.get("userId"));
+		user.setUserName(params.get("userName"));
+		user.setUserPw(params.get("userPw"));
+		user.setNickname(params.get("nickname"));
+
+		Letter letter = new Letter();	// 가입 축하 편지 보내기
+		letter.setFromId("SIEUN");
+		letter.setFromNickname("관리자");
+		letter.setText("회원가입을 축하드립니다! <br>계속해서 다양한 기능들을 업데이트할 예정이니 많이 이용해주세요 :D");
+		letter.setTitle("회원가입을 축하드립니다!");
+		letter.setToId(user.getUserId());
+		letter.setToNickname(user.getNickname());
+
+		try {
+			service.join(user);
+			lService.write(letter);
+		} catch (Exception e) {
+			e.printStackTrace(); // 오류나면 service에서 보낸 문구를 콘솔에 출력
+			mv.setViewName("login");
+			mv.addObject("msg", "<font color=red><b>글을 등록하는 중 오류가 발생했습니다.</b></font>");
+			return mv;
+		}		
+		mv.setViewName("error/error");
+		mv.addObject("msg", "가입이 완료되었습니다! 로그인 후 다양한 기능을 이용해 보세요 :)");
+		mv.addObject("nextLocation", "/goLogin.do");
+		return mv;
+	}
+
+	@RequestMapping("/chkId.do") 	// ID 중복 확인
+	@ResponseBody
+	public int chkId(@RequestParam HashMap<String, String> params) {
+		log.debug("/chkId.do - params : " + params); // 파라미터 출력해보기
+
+		String userId = params.get("userId");
+		return service.chkId(userId);
+	}
+
+	@RequestMapping("/user/getInfo.do")	// 마이 페이지 (본인 정보 조회)
+	public ModelAndView getInfo(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/user/getInfo.do - params : " + params); // 파라미터 출력해보기
+		ModelAndView mv = new ModelAndView();
+
+		if(session.getAttribute("userId") == null) { 		// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
+			mv.addObject("nextLocation", "/goLogin.do");
+			return mv;
+		}
+
+		// 사용자 정보를 가져온다
+		User user = service.getUser(String.valueOf(session.getAttribute("userId")));
+		mv.addObject("user", user);
+		mv.addObject("msg", params.get("msg"));
+		mv.setViewName("user/readUserInfo");
+		return mv;
+	}
+
+	@RequestMapping("/user/delete.do")			// 탈퇴하기
+	public ModelAndView quitService(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/user/delete.do - params : " + params); // 파라미터 출력해보기
+		ModelAndView mv = new ModelAndView();
+
+		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
+			//			RedirectView rv = new RedirectView("/web_portfolio/goLogin.do");
+			//			mv.setView(rv);
+			mv.setViewName("error/error");
+			mv.addObject("nextLocation", "/goLogin.do");
+			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
+			return mv;
+		}
+
+		String userId = String.valueOf(session.getAttribute("userId"));
+		String comparePw = params.get("password");
+
+		try {						// 탈퇴 메서드 수행
+			service.delete(userId, comparePw);
+		} catch(Exception e) {		// 비밀번호가 맞지 않으면 다시 사용자 정보로
+			RedirectView rv = new RedirectView("/new_web/user/getInfo.do");
+			String msg = "";
+			switch(e.getMessage()) {
+			case "DELETE_ANOMALY":
+				msg = "삭제 중 오류가 발생했습니다.";
+				break;
+			case "NOT_EQ_PASSWORD":
+				msg = "비밀번호가 일치하지 않습니다.";
+				break;
+			}
+			mv.addObject("msg", msg);
+			mv.setView(rv);
+			return mv;
+		}
+		session.invalidate(); // 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
+		mv.setViewName("error/error");
+		mv.addObject("msg", "정상적으로 탈퇴되었습니다 :)");
+		mv.addObject("nextLocation", "/goJoin.do");	// 탈퇴 화면으로
+		return mv;
+	}
+
+	@RequestMapping("/user/goEdit.do")
+	public ModelAndView goEdit(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/user/goEdit.do - params : " + params); // 파라미터 출력해보기
+		ModelAndView mv = new ModelAndView();
+
+		if(session.getAttribute("userId") == null) { 		// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
+			mv.addObject("nextLocation", "/goLogin.do");
+			return mv;
+		}
+
+		String userId = String.valueOf(session.getAttribute("userId"));
+		String comparePw = params.get("password");
+		User user;
+		try {						// 수정할 정보 불러오기
+			user = service.goEdit(userId, comparePw);
+		} catch(Exception e) {		// 비밀번호가 맞지 않으면 다시 사용자 정보로
+			RedirectView rv = new RedirectView("/new_web/user/getInfo.do");
+			mv.addObject("msg", "비밀번호가 일치하지 않습니다.");
+			mv.addObject("userId", userId);
+			mv.setView(rv);
+			return mv;
+		}
+		mv.addObject("user", user);
+		mv.setViewName("user/editUser");
+		return mv;
+	}
+	
+	@RequestMapping("/user/doEdit.do")
+	public ModelAndView doEdit(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/user/doEdit.do - params : " + params); // 파라미터 출력해보기
+		ModelAndView mv = new ModelAndView();
+
+		User user = service.getUser(String.valueOf(session.getAttribute("userId")));
+		user.setUserPw(params.get("userPw"));
+		user.setNickname(params.get("nickname"));
+		user.setEmail(params.get("email"));
+		try {
+			service.editUser(user);
+		} catch(Exception e) {
+			e.printStackTrace();			// 오류나면 service에서 보낸 문구를 콘솔에 출력
+			mv.addObject("user", user);
+			mv.addObject("msg", "글을 수정하는 중 오류가 발생했습니다.");
+			RedirectView rv = new RedirectView("/new_web/user/goEditUser.do");
+			mv.setView(rv);
+			return mv;
+		}
+		session.invalidate(); // 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
+		mv.setViewName("error/error");
+		mv.addObject("msg", "수정이 완료되었습니다. 다시 로그인 해주세요 :)");
+		mv.addObject("nextLocation", "/goLogin.do");	// 로그인 화면으로
+		return mv;
+	}
+}

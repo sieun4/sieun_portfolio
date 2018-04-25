@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.dao.LetterDao"> <!-- DAO 구현체 -->
+	<insert id="write" parameterType="Letter">
+		INSERT INTO iot.letter 
+		(to_id, to_nickname, title, text, date, from_id, from_nickname)
+		VALUES 
+		(#{toId}, #{toNickname}, #{title}, #{text}, NOW(), #{fromId}, #{fromNickname})
+	</insert>
+	<select id="count" resultType="int">
+		SELECT COUNT(*) FROM iot.letter
+		WHERE 1=1
+		<if test="fromId != null">
+			AND from_id = #{fromId}
+		</if>
+		<if test="toId != null">
+			AND to_id = #{toId}
+		</if>
+		<if test="(searchType != null and searchType == 'all') and fromId != null and searchText != ''">
+			AND (to_id LIKE CONCAT('%', #{searchText}, '%')
+				OR title LIKE CONCAT('%', #{searchText}, '%')
+				OR text LIKE CONCAT('%', #{searchText}, '%'))
+		</if>
+		<if test="(searchType != null and searchType == 'all') and toId != null and searchText != ''">
+			AND (from_id LIKE CONCAT('%', #{searchText}, '%')
+				OR title LIKE CONCAT('%', #{searchText}, '%')
+				OR text LIKE CONCAT('%', #{searchText}, '%'))
+		</if>
+		<if test="(searchType != null and searchType == 'toId') and searchText != ''">
+			AND to_id LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if test="(searchType != null and searchType == 'fromId') and searchText != ''">
+			AND from_id LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if test="(searchType != null and searchType == 'title') and searchText != ''">
+			AND title LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if test="(searchType != null and searchType == 'text') and searchText != ''">
+			AND text LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+	</select>
+	<select id="list" parameterType="HashMap" resultType="HashMap">
+		SELECT seq, to_id, to_nickname, title, text, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as date, from_id, from_nickname, hit FROM iot.letter
+		WHERE 1=1
+		<if test="fromId != null">
+			AND from_id = #{fromId}
+		</if>
+		<if test="toId != null">
+			AND to_id = #{toId}
+		</if>
+		<if test="(searchType != null and searchType == 'all') and fromId != null and searchText != ''">
+			AND (to_id LIKE CONCAT('%', #{searchText}, '%')
+				OR title LIKE CONCAT('%', #{searchText}, '%')
+				OR text LIKE CONCAT('%', #{searchText}, '%'))
+		</if>
+		<if test="(searchType != null and searchType == 'all') and toId != null and searchText != ''">
+			AND (from_id LIKE CONCAT('%', #{searchText}, '%')
+				OR title LIKE CONCAT('%', #{searchText}, '%')
+				OR text LIKE CONCAT('%', #{searchText}, '%'))
+		</if>
+		<if test="(searchType != null and searchType == 'fromId') and searchText != ''">
+			AND from_id LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if test="(searchType != null and searchType == 'toId') and searchText != ''">
+			AND to_id LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		<if test="(searchType != null and searchType == 'title') and searchText != ''">
+			AND title LIKE CONCAT('%', #{searchText}, '%')
+<!-- 			'%#{searchText%}' 로 쓰면 '%'#{searchText'%}'가 되기 때문에 concat 사용  -->
+<!-- 			AND title LIKE '%검색어%'		%는 문자 / 검색어가 포함된 -->
+<!-- 			AND title LIKE '검색어%'		%는 문자 / 검색어로 시작된 -->
+<!-- 			AND title LIKE '%검색어'		%는 문자 / 검색어로 끝난 -->
+		</if>
+		<if test="(searchType != null and searchType == 'text') and searchText != ''">
+			AND text LIKE CONCAT('%', #{searchText}, '%')
+		</if>
+		ORDER BY seq DESC 
+		LIMIT #{startArticleNo}, #{pageArticle}
+		<!-- 매개변수를 (int startArticleNo, int pageArticle)로 받았을 경우 #{0}, #{1} -->
+		<!-- 쿼리가 길어지면 0, 1, 2, 3... 으로 알아보기 어렵기 때문에 주로 HashMap으로 받아서 씀 -->
+	</select>
+	<select id="read" resultType="Letter">
+		SELECT * FROM iot.letter WHERE seq = #{seq}
+	</select>
+	<update id="newLetter" parameterType="int">
+		UPDATE iot.letter SET hit = '읽음' WHERE seq = #{seq}
+	</update>
+	<select id="newCnt" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM iot.letter WHERE to_id = #{userId} AND hit = '읽지않음'
+	</select>
+</mapper>
