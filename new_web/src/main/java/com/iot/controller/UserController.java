@@ -34,7 +34,6 @@ public class UserController {
 		ModelAndView mv = new ModelAndView();
 
 		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
-
 			mv.setViewName("error/error");
 			mv.addObject("msg", "이미 로그인 하셨습니다 :)");
 			mv.addObject("nextLocation", "/index.do");
@@ -50,7 +49,6 @@ public class UserController {
 		ModelAndView mv = new ModelAndView();
 
 		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
-
 			mv.setViewName("error/error");
 			mv.addObject("msg", "이미 로그인 하셨습니다 :)");
 			mv.addObject("nextLocation", "/index.do");
@@ -117,7 +115,6 @@ public class UserController {
 			mv.addObject("nextLocation", "/index.do");
 			return mv;
 		}							
-
 		mv.setViewName("user/join");	// 로그인 안 한 경우 회원가입 페이지로
 		return mv;
 	}
@@ -133,7 +130,6 @@ public class UserController {
 			mv.addObject("nextLocation", "/index.do");
 			return mv;
 		}	
-
 		User user = new User();
 		user.setUserId(params.get("userId"));
 		user.setUserName(params.get("userName"));
@@ -167,8 +163,14 @@ public class UserController {
 	@ResponseBody
 	public int chkId(@RequestParam HashMap<String, String> params) {
 		log.debug("/chkId.do - params : " + params); // 파라미터 출력해보기
-
+		
 		String userId = params.get("userId");
+		
+		for(int i=0; i<userId.length(); i++) {
+			if('A' <= userId.charAt(i) && userId.charAt(i) <= 'Z')
+				return 2;
+		}
+		
 		return service.chkId(userId);
 	}
 
@@ -198,8 +200,6 @@ public class UserController {
 		ModelAndView mv = new ModelAndView();
 
 		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
-			//			RedirectView rv = new RedirectView("/web_portfolio/goLogin.do");
-			//			mv.setView(rv);
 			mv.setViewName("error/error");
 			mv.addObject("nextLocation", "/goLogin.do");
 			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
@@ -281,7 +281,7 @@ public class UserController {
 			mv.setView(rv);
 			return mv;
 		}
-		session.invalidate(); // 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
+		session.invalidate(); 		// 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
 		mv.setViewName("error/error");
 		mv.addObject("msg", "수정이 완료되었습니다. 다시 로그인 해주세요 :)");
 		mv.addObject("nextLocation", "/goLogin.do");	// 로그인 화면으로
