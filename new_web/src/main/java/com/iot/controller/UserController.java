@@ -1,6 +1,8 @@
 package com.iot.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -286,5 +288,60 @@ public class UserController {
 		mv.addObject("msg", "수정이 완료되었습니다. 다시 로그인 해주세요 :)");
 		mv.addObject("nextLocation", "/goLogin.do");	// 로그인 화면으로
 		return mv;
+	}
+	
+	@RequestMapping("/user/list.do")
+	public ModelAndView list(@RequestParam Map<String, String> params, HttpSession session) {
+		log.debug("/user/list.do params : " + params);
+		ModelAndView mv = new ModelAndView();
+		
+		if(session.getAttribute("userId") == null) { 		// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
+			mv.addObject("nextLocation", "/goLogin.do");
+			return mv;
+		}
+		if(!session.getAttribute("isAdmin").equals("1")) {	// 관리자가 아닌 경우		
+			mv.setViewName("error/error");
+			mv.addObject("msg", "권한이 없습니다 ㅠㅠ");
+			mv.addObject("nextLocation", "/index.do");
+			return mv;
+		}
+		mv.setViewName("user/list");
+		return mv;
+	}
+	
+	@RequestMapping("/user/getUserData.do")
+	@ResponseBody	// 비동기
+	public HashMap<String, Object> getUserData(@RequestParam HashMap<String, String> params) {
+		log.debug("/user/getUserData.do params : " + params);
+		
+		// DAO로 보낼 파라미터
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("searchType", params.get("searchType"));
+		resultMap.put("searchText", params.get("searchText"));
+		
+		// jsp에서 보낸 파라미터를 HashMap으로 받음
+		// jsp에서 값을 보내지 않으면 currentPageNo의 if문이 실행되지 않음
+		int totalCount = service.count(resultMap);		// 총 게시글 수
+		int pageArticle = Integer.parseInt(params.get("rows").toString());	// 한 페이지에 보여줄 게시글 수
+		int currentPage = Integer.parseInt(params.get("page").toString());	// jsp에서 값을 받지 않았을 때의 현재페이지 기본 설정
+
+		// 총 페이지 수 = 총 게시글 수 / 한 페이지 게시글 수 (나머지가 0이 아닐 경우 +1)
+		int totalPage = totalCount / pageArticle;
+		totalPage = (totalCount % pageArticle == 0) ? totalPage : totalPage + 1;
+
+		int start = (currentPage - 1) * pageArticle;	// 시작글 번호
+
+		params.put("start", String.valueOf(start));
+		
+		ArrayList<User> result = service.list(params);
+		
+		// DAO로 보낼 파라미터
+		resultMap.put("page", currentPage);		// 현재 페이지
+		resultMap.put("total", totalPage);		// 총 페이지 수
+		resultMap.put("records", totalCount);	// 총 데이터 건수
+		resultMap.put("rows", result);			// 보여줄 데이터 15건
+		return resultMap;	// @ResponseBody 안 쓰면 값 안 넘어가는데 에러도 안 남. 주의!!!
 	}
 }

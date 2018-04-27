@@ -39,7 +39,7 @@
 					<section class="6u 12u(narrower) feature">
 					<div class="image-wrapper first">
 						<a class="image featured first"><img
-							src='<c:url value="/resources/images/photo_15.JPG"/>' alt="" /></a>
+							src='<c:url value="/resources/images/photo_15.JPG"/>' /></a>
 					</div>
 					<header>
 					<h2>받은 편지함</h2>
@@ -54,7 +54,7 @@
 					<section class="6u 12u(narrower) feature">
 					<div class="image-wrapper">
 						<a class="image featured"><img
-							src='<c:url value="/resources/images/photo_6.JPG"/>' alt="" /></a>
+							src='<c:url value="/resources/images/photo_6.JPG"/>' /></a>
 					</div>
 					<header>
 					<h2>자유게시판</h2>
@@ -70,13 +70,14 @@
 			</div>
 		</div>
 
-		<div>
-			<!-- q = 원하는 주소 구글맵에서 찾아서 주소명넣으면 됨 -->
-			<iframe
-				src="https://www.google.com/maps/embed/v1/place?q=강남역&amp;key=AIzaSyBSFRN6WWGYwmFi498qXXsD2UwkbmD74v4"
-				frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-				style="width: 100%; height: 200px;"></iframe>
-		</div>
+<!-- 		<div align="center"> -->
+<!-- 			<p><br/><br/>저 여기있어요...★</p> -->
+ 			<!-- q = 원하는 주소 구글맵에서 찾아서 주소명넣으면 됨  -->
+<!-- 			<iframe -->
+<!-- 				src="https://www.google.com/maps/embed/v1/place?q=더조은IT 아카데미&amp;key=AIzaSyBSFRN6WWGYwmFi498qXXsD2UwkbmD74v4" -->
+<!-- 				frameborder="0" scrolling="no" marginheight="0" marginwidth="0" -->
+<!-- 				style="width: 50%; height: 300px;"></iframe> -->
+<!-- 		</div> -->
 
 
 	</div>

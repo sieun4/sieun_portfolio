@@ -26,8 +26,7 @@
 <script src='<c:url value="/resources/assets/js/main.js"/>'></script>
 
 <script type="text/javascript">
-var ctx = "<%=request.getContextPath()%>
-	";
+var ctx = "<%=request.getContextPath()%>";
 	jQuery(document).ready(function() {
 		//             $("#accordion").collapse();
 
@@ -81,57 +80,54 @@ var ctx = "<%=request.getContextPath()%>
 								target="demoFrame">보낸 편지함</a></li>
 							<li><a href='<c:url value="/letter/goWrite.do"/>'
 								target="demoFrame">편지 쓰기</a></li>
-							<!-- 											<li><a href="#">Etiam dolore nisl</a></li> -->
-							<!-- 											<li> -->
-							<!-- 												<a href="#">Phasellus consequat</a> -->
-							<!-- 												<ul> -->
-							<!-- 													<li><a href="#">Lorem ipsum dolor</a></li> -->
-							<!-- 													<li><a href="#">Phasellus consequat</a></li> -->
-							<!-- 													<li><a href="#">Magna phasellus</a></li> -->
-							<!-- 													<li><a href="#">Etiam dolore nisl</a></li> -->
-							<!-- 												</ul> -->
-							<!-- 											</li> -->
-							<!-- 											<li><a href="#">Veroeros feugiat</a></li> -->
 						</ul></li>
 					<li><a href='<c:url value="/free/list.do"/>'
 						target="demoFrame">자유 게시판</a></li>
-					<li class="break"><a href='<c:url value="/user/getInfo.do"/>'
-						target="demoFrame">마이 페이지</a></li>
-					<c:if test="${sessionScope.userId != null}">
-						<li><a href="" onclick="doLogout()">로그 아웃</a></li>
-					</c:if>
-					<c:if test="${sessionScope.userId == null}">
-						<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>
-					</c:if>
+					<li class="break"><a href="#">마이 페이지</a>
+						<ul>
+							<li><a href='<c:url value="/user/getInfo.do"/>'
+								target="demoFrame">개인 정보 관리</a></li>
+							<li><a href='<c:url value="/friend/list.do"/>'
+								target="demoFrame">주소록 관리</a></li>
+							<c:if test="${sessionScope.isAdmin == 1 }">
+								<li><a href='<c:url value="/user/list.do"/>'
+									target="demoFrame">회원 관리</a></li>
+							</c:if>
+						</ul></li>
+
+					<c:choose>
+						<c:when test="${sessionScope.userId != null}">
+							<li><a href="" onclick="doLogout()">로그 아웃</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>
+						</c:otherwise>
+					</c:choose>
 				</ul>
 				</nav>
-
 			</div>
-
-
 
 			<!-- Hero -->
 			<section id="hero" class="container"> <header>
 			<h2>
-				<c:if test="${sessionScope.userId == null }">로그인 후 다양한 기능들을 이용해보세요! :D</c:if>
-				<c:if test="${sessionScope.userId != null }">
-					<c:out value="${sessionScope.nickname }" />(<c:out
-						value="${sessionScope.userId }" />)님 반갑습니다! :D
-</c:if>
+				<c:choose>
+					<c:when test="${sessionScope.userId == null }">로그인 후 다양한 기능들을 이용해보세요! :D</c:when>
+					<c:otherwise>
+						<c:out value="${sessionScope.nickname }" />(<c:out
+							value="${sessionScope.userId }" />)님 반갑습니다! :D
+					</c:otherwise>
+				</c:choose>
 			</h2>
 			</header> </section>
 		</div>
 
 		<div align="center">
 			<br />
-			<iframe id="demoFrame" name="demoFrame"
-				style="width: 803px; border-width: 0;" cellpadding=0 cellspacing=0
+			<iframe id="demoFrame" name="demoFrame" frameborder="0"
+				marginheight="0" marginwidth="0" style="width: 70%; height: 100%;"
 				onload="resize(this)"></iframe>
 			<br />
 		</div>
-
-
-
 
 		<!-- Footer -->
 		<div id="footer-wrapper">
@@ -170,22 +166,24 @@ var ctx = "<%=request.getContextPath()%>
 					<div class="row 50%">
 						<div align="center" class="12u">
 							이 페이지는 아래 항목을 이용하여 구현하였습니다.<br /> Spring Framework
-							4.3.14.RELEASE<br /> myBatis 3.4.1<br /> jUnit 4.12<br /> last
-							update.... 2018. 04. 25 <br />
-							<br /> (이 버튼은 왜때문에 가운데로 안 가....)
+							4.3.14.RELEASE<br /> myBatis 3.4.1<br /> jUnit 4.12<br /> <br />
+							last update 2018. 04. 27 <br />
+							<br />
+							<section id="hero" class="6u 12u(narrower)"> <a
+								class="button">SIEUN</a>
 						</div>
-					</div>
-					<section id="hero" class="6u 12u(narrower)"> <a
-						class="button">SIEUN</a> </section> </section>
+					</section>
+					</section>
 				</div>
 			</div>
-			<div id="copyright" class="container">
-				<ul class="menu">
-					<li>&copy; Untitled. All rights reserved.</li>
-					<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-				</ul>
-			</div>
 		</div>
+		<div id="copyright" class="container">
+			<ul class="menu">
+				<li>&copy; Untitled. All rights reserved.</li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</div>
+	</div>
 
 	</div>
 </body>

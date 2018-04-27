@@ -56,10 +56,8 @@ body {
 </script>
 </head>
 <body>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">편지함</a></li>
-		</ul>
+	<div id="tabs" align="center">
+		<br />편지함
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">
@@ -115,8 +113,7 @@ body {
 									<c:if test="${msg != null }">
 									${msg }
 								</c:if>
-									<br />
-									<br />
+									<br /> <br />
 
 									<!-- bottom button -->
 									<div class="btn_bottom">

@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%-- tag library 선언 : c tag --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%-- tag library 선언 : fmt tag --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
 <head>
@@ -42,7 +44,6 @@ $(document).ready(function(){
 
 function doUpdate() {
 	var title = document.getElementById("board_write_title").value;
-// 	var contents = document.getElementById("contents").value;
 	var contents = CKEDITOR.instances['contents'].getData();
 
 //		유효성 검사는 하나의 항목마다 전부 if로 씀 (if-else if 안 씀)
@@ -75,10 +76,8 @@ function doDelete(attachSeq){	// 매개변수 데이터타입 필요 없음 (자
 <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
 </head>
 <body>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">자유게시판 게시글 수정</a></li>
-		</ul>
+	<div id="tabs" align="center">
+		<br/>자유게시판
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">

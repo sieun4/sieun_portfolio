@@ -1,5 +1,8 @@
 package com.iot.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.iot.dto.User;
 
 public interface UserService {
@@ -17,5 +20,9 @@ public interface UserService {
 	public User goEdit(String userId, String comparePw) throws Exception;
 
 	public int editUser(User user) throws Exception;
+
+	public int count(HashMap<String, Object> params);
+
+	public ArrayList<User> list(HashMap<String, String> params);
 
 }

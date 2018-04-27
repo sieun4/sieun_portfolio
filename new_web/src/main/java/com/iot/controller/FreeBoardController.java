@@ -93,7 +93,6 @@ public class FreeBoardController {
 		mv.addObject("pageBlockEnd", pageBlockEnd);
 		mv.addObject("searchType", params.get("searchType"));
 		mv.addObject("searchText", params.get("searchText"));
-
 		mv.setViewName("/free/list");
 		return mv;
 	}

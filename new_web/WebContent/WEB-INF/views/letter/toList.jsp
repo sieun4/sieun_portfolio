@@ -50,10 +50,8 @@ body {
 </script>
 </head>
 <body>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">받은 편지함</a></li>
-		</ul>
+	<div id="tabs" align="center">
+		<br />보낸 편지함
 		<!-- wrap -->
 		<div id="wrap">
 
@@ -130,8 +128,8 @@ body {
 								</table>
 								<!-- //board list table -->
 
+								<!--paginate start -->
 								<c:if test="${letter.size() != 0 }">
-									<!--paginate start -->
 									<div class="paginate">
 
 										<c:if test="${currentPageNo != 1}">
@@ -168,8 +166,8 @@ body {
 										</c:if>
 
 									</div>
-									<!--//paginate end -->
 								</c:if>
+								<!--//paginate end -->
 							</fieldset>
 						</form>
 					</div>
@@ -183,5 +181,6 @@ body {
 
 		</div>
 		<!-- //wrap -->
+	</div>
 </body>
 </html>

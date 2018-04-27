@@ -52,8 +52,7 @@
 </head>
 <body onload="init()">
 	<!-- wrap -->
-	<div id="wrap">
-
+	<div id="wrap" align="center">
 		<!-- container -->
 		<div id="container">
 
@@ -63,7 +62,7 @@
 				<br /> <br />
 
 				<!-- title board detail -->
-				<div class="title_board_detail"></div>
+				<div class="title_board_detail">개인 정보 조회</div>
 				<!-- //title board detail -->
 
 				<!-- board_area -->

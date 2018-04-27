@@ -1,5 +1,8 @@
 package com.iot.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,5 +81,15 @@ public class UserServiceImpl implements UserService {
 		int result = dao.editUser(user);
 		if(result != 1) throw new AnomalyException(1, result); // (기대값, 실제값)
 		return result;
+	}
+
+	@Override
+	public int count(HashMap<String, Object> params) {
+		return dao.count(params);
+	}
+
+	@Override
+	public ArrayList<User> list(HashMap<String, String> params) {
+		return dao.list(params);
 	}
 }

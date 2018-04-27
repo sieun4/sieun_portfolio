@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.iot.dto.FreeBoard;
+import com.iot.dto.Friend;
 import com.iot.dto.Letter;
+import com.iot.service.FriendService;
 import com.iot.service.LetterService;
 
 @Controller
@@ -22,7 +25,7 @@ public class LetterController {
 
 	@Autowired
 	LetterService service;
-	
+
 	@RequestMapping("/letter/goWrite.do")
 	public ModelAndView goWrite(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/letter/goWrite.do - params : " + params);

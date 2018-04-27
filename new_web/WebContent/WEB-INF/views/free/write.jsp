@@ -69,10 +69,8 @@ body {
 <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
 </head>
 <body>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">자유게시판 작성</a></li>
-		</ul>
+	<div id="tabs" align="center">
+		<br/>자유게시판
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">
@@ -115,7 +113,7 @@ body {
 											<tr>
 												<th class="tright"><label for="board_write_title">제목</label></th>
 												<td class="tleft"><input type="text" name="title"
-													id="board_write_title" title="제목 입력박스" class="input_380" />
+													id="board_write_title" title="제목 입력박스" class="input_550" />
 												</td>
 											</tr>
 											<tr>

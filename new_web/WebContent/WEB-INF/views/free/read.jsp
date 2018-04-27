@@ -108,10 +108,8 @@ function doDelete(){
 </script>
 </head>
 <body>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">자유게시판</a></li>
-		</ul>
+	<div id="tabs" align="center">
+		<br/>자유게시판
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">

@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
 <head>
-<title>게시물 목록페이지</title>
+<title>친구 목록 페이지</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -40,11 +40,17 @@ body {
 			frm.submit();
 		});
 	});
+
+	function popupOpen() {
+		var popUrl = "<c:url value="/friend/goRegister.do"/>"; //팝업창에 출력될 페이지 URL
+		var popOption = "width=400, height=400, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
+		window.open(popUrl, "", popOption);
+	}
 </script>
 </head>
 <body>
 	<div id="tabs" align="center">
-		<br />자유게시판
+		<br />친구 목록
 		<!-- wrap -->
 		<div id="wrap">
 
@@ -61,15 +67,13 @@ body {
 								<option value="all"
 									<c:if test="${searchType == 'all' }"> selected</c:if>>전체</option>
 								<option value="userId"
-									<c:if test="${searchType == 'userId' }"> selected</c:if>>작성자
-									ID</option>
-								<option value="nickname"
-									<c:if test="${searchType == 'nickname' }"> selected</c:if>>작성자
+									<c:if test="${searchType == 'friendId' }"> selected</c:if>>친구
+									아이디</option>
+								<option value="userId"
+									<c:if test="${searchType == 'friendNickname' }"> selected</c:if>>친구
 									닉네임</option>
-								<option value="title"
-									<c:if test="${searchType == 'title' }"> selected</c:if>>제목</option>
-								<option value="contents"
-									<c:if test="${searchType == 'contents' }"> selected</c:if>>내용</option>
+								<option value="userId"
+									<c:if test="${searchType == 'memo' }"> selected</c:if>>메모</option>
 							</select> <input type="text" id="searchText" name="searchText"
 								value="${searchText }" title="검색어 입력박스" class="input_100" /> <input
 								type="button" id="btnSearch" value="검색" title="검색버튼"
@@ -88,64 +92,52 @@ body {
 									class="board_list_table">
 									<caption>게시물 목록</caption>
 									<colgroup>
-										<col width="10%" />
-										<!-- 글번호 -->
-										<col width="40%" />
-										<!-- 제목 -->
-										<col width="20%" />
-										<!-- 작성자 -->
-										<col width="20%" />
-										<!-- 작성일 -->
-										<col width="10%" />
-										<!-- 조회수 -->
+										<col width="25%" />
+										<!-- 친구 아이디 -->
+										<col width="25%" />
+										<!-- 친구 닉네임 -->
+										<col width="50%" />
+										<!-- 메모 -->
 									</colgroup>
 									<thead>
 										<tr>
-											<th scope="col">글번호</th>
-											<th scope="col">제목</th>
-											<th scope="col">작성자</th>
-											<th scope="col">작성일</th>
-											<th scope="col">조회수</th>
+											<th scope="col">친구 아이디</th>
+											<th scope="col">친구 닉네임</th>
+											<th scope="col">메모</th>
 										</tr>
 									</thead>
 									<tbody>
 										<c:forEach items="${result }" var="f">
 											<tr>
-												<td><c:out value="${f.seq}" /></td>
 												<td class="tleft"><span class="bold"> <a
-														href="/new_web/free/read.do?currentPageNo=${currentPageNo}&seq=${f.seq }">
-															<c:out value="${f.title}" /> <c:if
-																test="${f.has_comment > 0 }">(<c:out
-																	value="${f.has_comment }" />)</c:if>
+														href="/new_web/friend/read.do?currentPageNo=${currentPageNo}&seq=${f.seq }">
+															<c:out value="${f.friend_id}" />
 													</a>
 												</span></td>
-												<td><c:out value="${f.nickname}" />(<c:out
-														value="${f.user_id }" />)</td>
-												<td><c:out value="${f.write_date}" /></td>
-												<td><c:out value="${f.hits}" /></td>
+												<td><c:out value="${f.friend_nickname}" /></td>
+												<td><c:out value="${f.memo}" /></td>
 											</tr>
 										</c:forEach>
 									</tbody>
 								</table>
 								<!-- //board list table -->
 
+								<!--paginate start -->
 								<c:if test="${result.size() != 0 }">
-									<!--paginate start -->
+
 									<div class="paginate">
 
 										<c:if test="${currentPageNo != 1}">
-											<a href="/new_web/free/list.do?currentPageNo=1">처음으로</a>
+											<a href="/new_web/friend/list.do?currentPageNo=1">처음으로</a>
 										</c:if>
-
 										<c:if test="${pageBlockStart != 1}">
 											<a
-												href="/new_web/free/list.do?currentPageNo=${pageBlockStart -1 }">이전페이지</a>
+												href="/new_web/friend/list.do?currentPageNo=${pageBlockStart -1 }">이전페이지</a>
 										</c:if>
-
 										<c:forEach var="i" begin="${pageBlockStart}"
 											end="${pageBlockEnd}" step="1">
 											<a
-												href="/new_web/free/list.do?currentPageNo=<c:out value='${i}'/>&searchType=<c:out value='${searchType}'/>&searchText=<c:out value='${searchText}'/>">
+												href="/new_web/friend/list.do?currentPageNo=<c:out value='${i}'/>&searchType=<c:out value='${searchType}'/>&searchText=<c:out value='${searchText}'/>">
 												<c:choose>
 													<c:when test="${i == currentPageNo }">
 														<strong>${i }</strong>
@@ -157,24 +149,20 @@ body {
 
 										<c:if test="${pageBlockStart + pageBlockSize <= totalPage }">
 											<a
-												href="/new_web/free/list.do?currentPageNo=${pageBlockEnd + 1 }">다음페이지</a>
+												href="/new_web/friend/list.do?currentPageNo=${pageBlockEnd + 1 }">다음페이지</a>
 										</c:if>
-
-										<c:if test="${currentPageNo != totalPage && totalPage != 0}">
-											<a href="/new_web/free/list.do?currentPageNo=${totalPage }">끝으로</a>
+										<c:if test="${currentPageNo != totalPage}">
+											<a href="/new_web/friend/list.do?currentPageNo=${totalPage }">끝으로</a>
 										</c:if>
-
 									</div>
-									<!--//paginate end -->
 								</c:if>
+								<!--//paginate end -->
 
 								<!-- bottom button -->
 								<div class="btn_bottom">
 									<div class="btn_bottom_right">
-										<a
-											href="/new_web/free/goWrite.do?currentPageNo=${currentPageNo }">
-											<input type="button" value="글쓰기" title="글쓰기" />
-										</a>
+										<input type="button" onclick="popupOpen()" value="새친구 등록"
+											title="새친구 등록" />
 									</div>
 								</div>
 								<!-- //bottom button -->

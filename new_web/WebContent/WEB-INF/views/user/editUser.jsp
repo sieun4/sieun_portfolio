@@ -41,15 +41,12 @@
 			alert(msg);
 		}
 	}
-	// 	function goBack(){
-	// 		window.history.back();	// 뒤로가기 
-	//		window.histroy.go(-1);	// 같음
-	// 	}
 </script>
 </head>
 <body onload="init()">
+
 	<!-- wrap -->
-	<div id="wrap">
+	<div id="wrap" align="center">
 
 		<!-- container -->
 		<div id="container">
@@ -136,6 +133,6 @@
 
 	</div>
 	<!-- //wrap -->
-
+	</div>
 </body>
 </html>
