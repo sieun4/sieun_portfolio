@@ -12,4 +12,8 @@ public interface FriendDao {
 
 	public ArrayList<Friend> list(HashMap<String, Object> p);
 
+	public int register(Friend f);
+
+	public int chkId(String friendId);
+
 }

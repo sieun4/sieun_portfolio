@@ -8,8 +8,9 @@ public class Friend {
 	private int seq;
 	private String userId;
 	private String friendId;
-	private String friendNickname;
+	private String friendName;
 	private String memo;
+	
 	public int getSeq() {
 		return seq;
 	}
@@ -28,11 +29,11 @@ public class Friend {
 	public void setFriendId(String friendId) {
 		this.friendId = friendId;
 	}
-	public String getFriendNickname() {
-		return friendNickname;
+	public String getFriendName() {
+		return friendName;
 	}
-	public void setFriendNickname(String friendNickname) {
-		this.friendNickname = friendNickname;
+	public void setFriendName(String friendName) {
+		this.friendName = friendName;
 	}
 	public String getMemo() {
 		return memo;

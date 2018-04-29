@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.iot.dto.Friend;
+import com.iot.dto.Letter;
 import com.iot.service.FriendService;
+import com.iot.service.UserService;
 
 @Controller
 public class FriendController {
@@ -22,10 +25,22 @@ public class FriendController {
 
 	@Autowired
 	FriendService service;
+	
+	@Autowired
+	UserService uService;
 
 	@RequestMapping("/friend/list.do")
 	public ModelAndView list(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/list.do - params : " + params);
+		ModelAndView mv = new ModelAndView();
+	
+		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("nextLocation", "/goLogin.do");
+			mv.addObject("msg", "로그인 후 이용해주세요 :)");
+			return mv;
+		}
+		
 		// jsp에서 보낸 파라미터를 HashMap으로 받음
 		// jsp에서 값을 보내지 않으면 currentPageNo의 if문이 실행되지 않음
 
@@ -62,8 +77,6 @@ public class FriendController {
 
 		ArrayList<Friend> result = service.list(p);
 
-		ModelAndView mv = new ModelAndView();
-
 		mv.addObject("result", result);
 		mv.addObject("totalArticle", totalArticle);
 		mv.addObject("totalPage", totalPage);
@@ -81,7 +94,76 @@ public class FriendController {
 	public ModelAndView goRegister(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/goRegister.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
+		
+		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("nextLocation", "/goLogin.do");
+			mv.addObject("msg", "로그인 후 이용해주세요 :)");
+			return mv;
+		}
+		
+		mv.addObject("userId", session.getAttribute("userId"));
 		mv.setViewName("friend/register");
+		return mv;
+	}
+	
+	@RequestMapping("/friend/doRegister.do")
+	@ResponseBody
+	public int doRegister(@RequestParam HashMap<String, String> params, HttpSession session) { 
+		log.debug("/friend/doRegister.do - params : " + params);
+		ModelAndView mv = new ModelAndView();
+		
+		// result == 0 : 존재하는 회원 아이디가 아님
+		// result == 1 : 이미 등록된 친구 
+		// result == 2 : 아이디에 영문 대문자 사용했을 경우
+		// result == 3 : 등록 오류
+		// result == 4 : 정상 등록
+		
+		String friendId = params.get("friendId");
+
+		for(int i=0; i<friendId.length(); i++) {
+			if('A' <= friendId.charAt(i) && friendId.charAt(i) <= 'Z')
+				return 2;
+		}
+		
+		if(uService.chkId(friendId) == 0) {
+			return 0;
+		}
+		else {
+			
+			if(service.chkId(friendId) != 0)
+				return 1;
+				
+			try {	
+				Friend f = new Friend();
+				f.setUserId(String.valueOf(session.getAttribute("userId")));
+				f.setFriendId(params.get("friendId"));
+				f.setFriendName(params.get("friendName"));
+				f.setMemo(params.get("memo"));
+				service.register(f);			
+				return 4;
+			} catch(Exception e) {
+				e.printStackTrace();			// 오류나면 service에서 보낸 문구를 콘솔에 출력
+				mv.setViewName("friend/register");
+				mv.addObject("msg", "<font color=red><b>새친구 추가에 오류가 발생했습니다.</b></font>");
+				return 3;
+			}
+		}
+	}
+	
+	@RequestMapping("/friend/read.do")
+	public ModelAndView read(@RequestParam HashMap<String, String> params, HttpSession session) { 
+		log.debug("/friend/read.do - params : " + params);
+		ModelAndView mv = new ModelAndView();
+		
+		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("nextLocation", "/goLogin.do");
+			mv.addObject("msg", "로그인 후 이용해주세요 :)");
+			return mv;
+		}
+		
+		mv.setViewName("friend/read");
 		return mv;
 	}
 }

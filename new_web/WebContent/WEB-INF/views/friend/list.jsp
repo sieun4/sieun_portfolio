@@ -41,9 +41,15 @@ body {
 		});
 	});
 
-	function popupOpen() {
+	function registerPopup() {
 		var popUrl = "<c:url value="/friend/goRegister.do"/>"; //팝업창에 출력될 페이지 URL
-		var popOption = "width=400, height=400, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
+		var popOption = "width=500, height=500, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
+		window.open(popUrl, "", popOption);
+	}
+	
+	function readPopup(seq) {
+		var popUrl = "<c:url value="/friend/read.do?seq="/>" + seq;	//팝업창에 출력될 페이지 URL
+		var popOption = "width=500, height=500, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
 		window.open(popUrl, "", popOption);
 	}
 </script>
@@ -70,8 +76,8 @@ body {
 									<c:if test="${searchType == 'friendId' }"> selected</c:if>>친구
 									아이디</option>
 								<option value="userId"
-									<c:if test="${searchType == 'friendNickname' }"> selected</c:if>>친구
-									닉네임</option>
+									<c:if test="${searchType == 'friendName' }"> selected</c:if>>친구
+									이름</option>
 								<option value="userId"
 									<c:if test="${searchType == 'memo' }"> selected</c:if>>메모</option>
 							</select> <input type="text" id="searchText" name="searchText"
@@ -102,19 +108,17 @@ body {
 									<thead>
 										<tr>
 											<th scope="col">친구 아이디</th>
-											<th scope="col">친구 닉네임</th>
+											<th scope="col">친구 이름</th>
 											<th scope="col">메모</th>
 										</tr>
 									</thead>
 									<tbody>
 										<c:forEach items="${result }" var="f">
 											<tr>
-												<td class="tleft"><span class="bold"> <a
-														href="/new_web/friend/read.do?currentPageNo=${currentPageNo}&seq=${f.seq }">
-															<c:out value="${f.friend_id}" />
-													</a>
-												</span></td>
-												<td><c:out value="${f.friend_nickname}" /></td>
+												<td><a href="#" onclick="readPopup(${f.seq})">
+															<c:out value="${f.friend_id}" /></a>
+					</td>
+												<td><c:out value="${f.friend_name}" /></td>
 												<td><c:out value="${f.memo}" /></td>
 											</tr>
 										</c:forEach>
@@ -161,8 +165,8 @@ body {
 								<!-- bottom button -->
 								<div class="btn_bottom">
 									<div class="btn_bottom_right">
-										<input type="button" onclick="popupOpen()" value="새친구 등록"
-											title="새친구 등록" />
+										<input type="button" onclick="registerPopup()" value="새친구 추가"
+											title="새친구 추가" />
 									</div>
 								</div>
 								<!-- //bottom button -->

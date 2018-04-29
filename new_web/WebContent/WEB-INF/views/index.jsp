@@ -167,8 +167,7 @@ var ctx = "<%=request.getContextPath()%>";
 						<div align="center" class="12u">
 							이 페이지는 아래 항목을 이용하여 구현하였습니다.<br /> Spring Framework
 							4.3.14.RELEASE<br /> myBatis 3.4.1<br /> jUnit 4.12<br /> <br />
-							last update 2018. 04. 27 <br />
-							<br />
+							last update 2018. 04. 27 <br /> <br />
 							<section id="hero" class="6u 12u(narrower)"> <a
 								class="button">SIEUN</a>
 						</div>

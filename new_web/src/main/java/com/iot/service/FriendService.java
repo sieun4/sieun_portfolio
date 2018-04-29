@@ -12,4 +12,8 @@ public interface FriendService {
 
 	public ArrayList<Friend> list(HashMap<String, Object> p);
 
+	public int register(Friend f) throws Exception;
+
+	public int chkId(String friendId);
+
 }

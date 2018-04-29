@@ -8,7 +8,7 @@
 		<if
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
-			OR freind_nickname LIKE CONCAT('%', #{searchText}, '%')
+			OR freind_name LIKE CONCAT('%', #{searchText}, '%')
 			OR memo LIKE CONCAT('%', #{searchText}, '%'))
 		</if>
 		<if
@@ -16,8 +16,8 @@
 			AND friend_id LIKE CONCAT('%', #{searchText}, '%')
 		</if>
 		<if
-			test="(searchType != null and searchType == 'friendNickname') and searchText != ''">
-			AND friend_nickname LIKE CONCAT('%', #{searchText}, '%')
+			test="(searchType != null and searchType == 'friendName') and searchText != ''">
+			AND friend_name LIKE CONCAT('%', #{searchText}, '%')
 		</if>
 		<if
 			test="(searchType != null and searchType == 'memo') and searchText != ''">
@@ -31,7 +31,7 @@
 		<if
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
-			OR freind_nickname LIKE CONCAT('%', #{searchText}, '%')
+			OR freind_name LIKE CONCAT('%', #{searchText}, '%')
 			OR memo LIKE CONCAT('%', #{searchText}, '%'))
 		</if>
 		<if
@@ -39,8 +39,8 @@
 			AND friend_id LIKE CONCAT('%', #{searchText}, '%')
 		</if>
 		<if
-			test="(searchType != null and searchType == 'friendNickname') and searchText != ''">
-			AND friend_nickname LIKE CONCAT('%', #{searchText}, '%')
+			test="(searchType != null and searchType == 'friendName') and searchText != ''">
+			AND friend_name LIKE CONCAT('%', #{searchText}, '%')
 		</if>
 		<if
 			test="(searchType != null and searchType == 'memo') and searchText != ''">
@@ -51,4 +51,15 @@
 		<!-- 매개변수를 (int startArticleNo, int pageArticle)로 받았을 경우 #{0}, #{1} -->
 		<!-- 쿼리가 길어지면 0, 1, 2, 3... 으로 알아보기 어렵기 때문에 주로 HashMap으로 받아서 씀 -->
 	</select>
+	
+	<insert id="register" parameterType="Friend">
+		INSERT INTO iot.friend 
+		(user_id, friend_id, friend_name, memo)
+		VALUES 
+		(#{userId}, #{friendId}, #{friendName}, #{memo})
+	</insert>
+	
+	<select id="chkId" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM iot.friend WHERE friend_id = #{friendId}
+	</select>	
 </mapper>
