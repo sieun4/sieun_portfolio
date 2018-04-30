@@ -295,7 +295,7 @@ public class UserController {
 		log.debug("/user/list.do params : " + params);
 		ModelAndView mv = new ModelAndView();
 		
-		if(session.getAttribute("userId") == null) { 		// 로그인 안 한 경우	
+		if(session.getAttribute("use rId") == null) { 		// 로그인 안 한 경우	
 			mv.setViewName("error/error");
 			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
 			mv.addObject("nextLocation", "/goLogin.do");
