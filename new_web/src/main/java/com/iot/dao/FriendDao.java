@@ -14,6 +14,12 @@ public interface FriendDao {
 
 	public int register(Friend f);
 
-	public int chkId(String friendId);
+	public int chkId(String friendId, String userId);
+
+	public Friend getData(int seq);
+
+	public int delete(int seq);
+
+	public int update(Friend friend);
 
 }

@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
 <head>
-<title>친구 목록 페이지</title>
+<title>편지 주소록</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -36,21 +36,16 @@ body {
 			var type = $('#searchType option:selected').val();
 			var text = $('#searchText').val();
 			var frm = $('#searchForm')[0]; // [0]없이 실행하면 배열
-			frm.action = "${pageContext.request.contextPath}/friend/list.do";
+			frm.method = 'POST';
+			frm.action = "${pageContext.request.contextPath}/friend/list.do?letter=letter";
 			frm.submit();
 		});
 	});
-
-	function registerPopup() {
-		var popUrl = "<c:url value="/friend/goRegister.do"/>"; //팝업창에 출력될 페이지 URL
-		var popOption = "width=500, height=500, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
-		window.open(popUrl, "", popOption);
-	}
 	
-	function readPopup(seq) {
-		var popUrl = "<c:url value="/friend/getData.do?seq="/>" + seq;
-		var popOption = "width=700, height=300, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
-		window.open(popUrl, "", popOption);
+	// 편지쓰기
+	function goWrite(toId) {
+		window.opener.location.href = "/new_web/letter/goWrite.do?toId=" + toId;
+		self.close();
 	}
 </script>
 </head>
@@ -92,34 +87,17 @@ body {
 					<div class="board_area">
 						<form method="get">
 							<fieldset>
-								<legend>게시물 목록</legend>
+								<legend>친구 목록</legend>
 								<!-- board list table -->
 								<table summary="표 내용은 Ses & Food 게시물의 목록입니다."
 									class="board_list_table">
-									<caption>게시물 목록</caption>
-									<colgroup>
-										<col width="25%" />
-										<!-- 친구 아이디 -->
-										<col width="25%" />
-										<!-- 친구 닉네임 -->
-										<col width="50%" />
-										<!-- 메모 -->
-									</colgroup>
-									<thead>
-										<tr>
-											<th scope="col">친구 아이디</th>
-											<th scope="col">친구 이름</th>
-											<th scope="col">메모</th>
-										</tr>
-									</thead>
+									<caption>친구 목록</caption>
 									<tbody>
 										<c:forEach items="${result }" var="f">
 											<tr>
-												<td><a href="#" onclick="readPopup(${f.seq})">
-															<b><c:out value="${f.friend_id}" /></b></a>
-					</td>
-												<td><c:out value="${f.friend_name}" /></td>
-												<td><c:out value="${f.memo}" /></td>
+												<td><a href="#" onclick="goWrite('${f.friend_id}')">
+														<c:out value="${f.friend_name}" />(<c:out value="${f.friend_id}" />)  
+												</a></td>
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -132,16 +110,16 @@ body {
 									<div class="paginate">
 
 										<c:if test="${currentPageNo != 1}">
-											<a href="/new_web/friend/list.do?currentPageNo=1">처음으로</a>
+											<a href="/new_web/friend/list.do?letter=letter&currentPageNo=1">처음으로</a>
 										</c:if>
 										<c:if test="${pageBlockStart != 1}">
 											<a
-												href="/new_web/friend/list.do?currentPageNo=${pageBlockStart -1 }">이전페이지</a>
+												href="/new_web/friend/list.do?letter=letter&currentPageNo=${pageBlockStart -1 }">이전페이지</a>
 										</c:if>
 										<c:forEach var="i" begin="${pageBlockStart}"
 											end="${pageBlockEnd}" step="1">
 											<a
-												href="/new_web/friend/list.do?currentPageNo=<c:out value='${i}'/>&searchType=<c:out value='${searchType}'/>&searchText=<c:out value='${searchText}'/>">
+												href="/new_web/friend/list.do?letter=letter&currentPageNo=<c:out value='${i}'/>&searchType=<c:out value='${searchType}'/>&searchText=<c:out value='${searchText}'/>">
 												<c:choose>
 													<c:when test="${i == currentPageNo }">
 														<strong>${i }</strong>
@@ -153,23 +131,14 @@ body {
 
 										<c:if test="${pageBlockStart + pageBlockSize <= totalPage }">
 											<a
-												href="/new_web/friend/list.do?currentPageNo=${pageBlockEnd + 1 }">다음페이지</a>
+												href="/new_web/friend/list.do?letter=letter&currentPageNo=${pageBlockEnd + 1 }">다음페이지</a>
 										</c:if>
 										<c:if test="${currentPageNo != totalPage}">
-											<a href="/new_web/friend/list.do?currentPageNo=${totalPage }">끝으로</a>
+											<a href="/new_web/friend/list.do?letter=letter&currentPageNo=${totalPage }">끝으로</a>
 										</c:if>
 									</div>
 								</c:if>
 								<!--//paginate end -->
-
-								<!-- bottom button -->
-								<div class="btn_bottom">
-									<div class="btn_bottom_right">
-										<input type="button" onclick="registerPopup()" value="새친구 추가"
-											title="새친구 추가" />
-									</div>
-								</div>
-								<!-- //bottom button -->
 
 							</fieldset>
 						</form>

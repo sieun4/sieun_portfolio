@@ -35,7 +35,26 @@ public class FriendServiceImpl implements FriendService {
 	}
 
 	@Override
-	public int chkId(String friendId) {
-		return dao.chkId(friendId);
+	public int chkId(String friendId, String userId) {
+		return dao.chkId(friendId, userId);
+	}
+
+	@Override
+	public Friend getData(int seq) {
+		return dao.getData(seq);
+	}
+
+	@Override
+	public int delete(int seq) throws Exception {
+		int result = dao.delete(seq);
+		if(result != 1) throw new Exception("친구 삭제 오류!!!!");
+		return result;
+	}
+
+	@Override
+	public int update(Friend friend) throws Exception {
+		int result = dao.update(friend);			// FreeBoard DB Update
+		if(result != 1) throw new AnomalyException(1, result); // (기대값, 실제값)
+		return result;
 	}
 }

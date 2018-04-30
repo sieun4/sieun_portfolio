@@ -168,15 +168,6 @@ public class FreeBoardController {
 			hasFile = (f.isEmpty()) ? "0" : "1";	// 첨부파일이 있는 경우 hasFile에 1입력
 			if(hasFile.equals("1")) break;
 		}
-		
-		//		필수 값 확인 (jsp에서 했음!!)
-		//		if( !params.containsKey("title") || params.get("title").equals("") || 
-		//			!params.containsKey("contents") || params.get("contents").equals("") ) {
-		//			mv.setViewName("bbs/free/write");
-		//			mv.addObject("msg", "<font color=red><b>제목 / 글내용은 필수입니다.</b></font>");
-		//			// read.do(controller)에서도 msg를 받아서 저장하지 않으면 read.jsp에서 출력 안 됨
-		//			return mv;
-		//		}
 
 		// FreeBoard DTO에 입력값 넣기
 		FreeBoard board = new FreeBoard();

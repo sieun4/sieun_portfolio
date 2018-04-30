@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.iot.dto.Friend;
-import com.iot.dto.Letter;
 import com.iot.service.FriendService;
 import com.iot.service.UserService;
 
@@ -41,15 +39,13 @@ public class FriendController {
 			return mv;
 		}
 		
-		// jsp에서 보낸 파라미터를 HashMap으로 받음
-		// jsp에서 값을 보내지 않으면 currentPageNo의 if문이 실행되지 않음
-
 		// 검색 기능을 사용했을 경우 DAO로 보낼 파라미터
 		HashMap<String, Object> p = new HashMap<String, Object>();
 		p.put("searchType", params.get("searchType"));
 		p.put("searchText", params.get("searchText"));
+		p.put("userId", String.valueOf(session.getAttribute("userId")));
 
-		int totalArticle = service.count(p);		// 총 게시글 수
+		int totalArticle = service.count(p);	// 총 게시글 수
 		int pageArticle = 10;					// 한 페이지에 보여줄 게시글 수
 		int currentPageNo = 1;					// jsp에서 값을 받지 않았을 때의 현재페이지 기본 설정
 		if(params.containsKey("currentPageNo"))
@@ -86,7 +82,11 @@ public class FriendController {
 		mv.addObject("pageBlockEnd", pageBlockEnd);
 		mv.addObject("searchType", params.get("searchType"));
 		mv.addObject("searchText", params.get("searchText"));
-		mv.setViewName("/friend/list");
+		
+		if(params.get("letter") != null)
+			mv.setViewName("friend/letterAddress");
+		else
+			mv.setViewName("/friend/list");
 		return mv;
 	}
 
@@ -120,20 +120,20 @@ public class FriendController {
 		// result == 4 : 정상 등록
 		
 		String friendId = params.get("friendId");
-
+		String userId = String.valueOf(session.getAttribute("userId"));
 		for(int i=0; i<friendId.length(); i++) {
 			if('A' <= friendId.charAt(i) && friendId.charAt(i) <= 'Z')
 				return 2;
 		}
 		
-		if(uService.chkId(friendId) == 0) {
+		if(uService.chkId(friendId) == 0) { // 존재하는 회원 아이디인지 확인 후 없다면 0 반환
 			return 0;
 		}
 		else {
-			
-			if(service.chkId(friendId) != 0)
-				return 1;
-				
+			log.debug("/friend/doRegister.do - userId : " + userId);
+
+			if(service.chkId(friendId, userId) != 0)	// 이미 등록된 친구라면 1 반환
+				return 1;	
 			try {	
 				Friend f = new Friend();
 				f.setUserId(String.valueOf(session.getAttribute("userId")));
@@ -151,9 +151,9 @@ public class FriendController {
 		}
 	}
 	
-	@RequestMapping("/friend/read.do")
-	public ModelAndView read(@RequestParam HashMap<String, String> params, HttpSession session) { 
-		log.debug("/friend/read.do - params : " + params);
+	@RequestMapping("/friend/getData.do")
+	public ModelAndView getData(@RequestParam HashMap<String, String> params, HttpSession session) { 
+		log.debug("/friend/getData.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
 		
 		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
@@ -163,7 +163,65 @@ public class FriendController {
 			return mv;
 		}
 		
-		mv.setViewName("friend/read");
+		try {
+			Friend friend = service.getData(Integer.parseInt(params.get("seq")));
+			mv.addObject("friend", friend);
+			mv.setViewName("friend/read");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return mv;
+	}
+	
+	@RequestMapping("/friend/delete.do")
+	@ResponseBody
+	public int delete(@RequestParam HashMap<String, String> params, HttpSession session) {
+		log.debug("/friend/delete.do - params : " + params);
+
+		try {						// delete메서드 수행
+			return service.delete(Integer.parseInt(params.get("seq")));
+		} catch(Exception e) {		
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	@RequestMapping("/friend/goUpdate")
+	public ModelAndView goUpdate(@RequestParam HashMap<String, String> params, HttpSession session) { 
+		log.debug("/friend/goUpdate.do - params : " + params);
+		ModelAndView mv = new ModelAndView();
+		
+		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
+			mv.setViewName("error/error");
+			mv.addObject("nextLocation", "/goLogin.do");
+			mv.addObject("msg", "로그인 후 이용해주세요 :)");
+			return mv;
+		}
+		
+		try {
+			Friend friend = service.getData(Integer.parseInt(params.get("seq")));
+			mv.addObject("friend", friend);
+			mv.setViewName("friend/update");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
+	}
+	
+	@RequestMapping("/friend/doUpdate")
+	@ResponseBody
+	public int doUpdate(@RequestParam HashMap<String, String> params, HttpSession session) { 
+		log.debug("/friend/doUpdate.do - params : " + params);
+		
+		Friend friend = service.getData(Integer.parseInt(params.get("seq")));
+		friend.setFriendName(params.get("friendName"));
+		friend.setMemo(params.get("memo"));
+		
+		try {								// update 실행
+			return service.update(friend);
+		} catch(Exception e) {
+			e.printStackTrace();			// 오류나면 service에서 보낸 문구를 콘솔에 출력
+			return 0;
+		}
 	}
 }

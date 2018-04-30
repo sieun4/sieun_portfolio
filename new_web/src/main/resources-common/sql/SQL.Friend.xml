@@ -4,11 +4,11 @@
 <mapper namespace="com.iot.dao.FriendDao"> <!-- DAO 구현체 -->
 	<select id="count" resultType="int">
 		SELECT COUNT(*) FROM iot.friend
-		WHERE 1=1
+		WHERE user_id = #{userId}
 		<if
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
-			OR freind_name LIKE CONCAT('%', #{searchText}, '%')
+			OR friend_name LIKE CONCAT('%', #{searchText}, '%')
 			OR memo LIKE CONCAT('%', #{searchText}, '%'))
 		</if>
 		<if
@@ -27,11 +27,11 @@
 	
 	<select id="list" parameterType="HashMap" resultType="HashMap">
 		SELECT * FROM iot.friend
-		WHERE 1=1
+		WHERE user_id = #{userId}
 		<if
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
-			OR freind_name LIKE CONCAT('%', #{searchText}, '%')
+			OR friend_name LIKE CONCAT('%', #{searchText}, '%')
 			OR memo LIKE CONCAT('%', #{searchText}, '%'))
 		</if>
 		<if
@@ -59,7 +59,21 @@
 		(#{userId}, #{friendId}, #{friendName}, #{memo})
 	</insert>
 	
-	<select id="chkId" parameterType="String" resultType="int">
-		SELECT COUNT(*) FROM iot.friend WHERE friend_id = #{friendId}
+	<select id="chkId" resultType="int">
+		SELECT COUNT(*) FROM iot.friend WHERE user_id = #{1} AND friend_id = #{0}
 	</select>	
+	
+	<select id="getData" resultType="Friend">
+		SELECT * FROM iot.friend WHERE seq = #{seq}
+	</select>
+	
+	<delete id="delete" parameterType="int">
+		DELETE FROM iot.friend WHERE seq = #{seq}
+	</delete>
+	
+	<update id="update" parameterType="Friend">
+		UPDATE iot.friend
+		SET friend_name = #{friendName}, memo = #{memo} 
+		WHERE seq = #{seq}
+	</update>
 </mapper>

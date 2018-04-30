@@ -38,17 +38,14 @@ body {
 <script type="text/javascript">
 	// 자바 스크립트 영역
 
-	// 삭제
-	function doDelete() {
-		if (confirm("삭제하시겠습니까?")) {
-			// 데이터 타입 없이 변수 선언할 때는 무조건 var
-			// document : body부분의 문서 / readForm : name 속성 값(form)
+	// 답장
+	function goReply() {
 			var frm = document.readForm;
-			frm.action = "/new_web/letter/delete.do";
+			frm.action = "/new_web/letter/goWrite.do?toId=${letter.fromId }";
 			frm.method = "POST";
 			frm.submit();
-		}
 	}
+	
 	$(document).ready(function() {
 		//Tab
 		$("#tabs").tabs();
@@ -94,9 +91,9 @@ body {
 											</tr>
 											<tr>
 												<th class="tleft">보낸 사람</th>
-												<td class="tleft"><c:out
+												<td class="tleft"><a href="/new_web/letter/goWrite.do?toId=${letter.fromId }"><c:out
 														value="${letter.fromNickname }" />(<c:out
-														value="${letter.fromId }" />)</td>
+														value="${letter.fromId }" />)</a></td>
 											</tr>
 											<tr>
 												<td colspan="2" class="tleft">${letter.text }
@@ -118,9 +115,12 @@ body {
 									<!-- bottom button -->
 									<div class="btn_bottom">
 										<div class="btn_bottom_left">
-											<!-- 										<input type="button" onclick="doDelete()" value="삭제" title="삭제" />  -->
 											<input type="button" onclick="window.history.back()"
 												value="돌아가기" title="돌아가기" />
+										</div>
+										<div class="btn_bottom_right">
+											<input type="button" onclick="goReply()"
+												value="답장" title="답장" />
 										</div>
 									</div>
 									<!-- //bottom button -->

@@ -21,7 +21,6 @@
 <body class="homepage">
 	<div id="page-wrapper">
 		<header class="major">
-		<p>☆업데이트 예정☆ 편지함: 주소록, 답장, 삭제 / 자유게시판: 태그</p>
 		<c:if test="${count != 0}">
 			<h2>
 				<font color="violet">${sessionScope.nickname }(${sessionScope.userId })</font>님에게

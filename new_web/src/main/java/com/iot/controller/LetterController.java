@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.iot.dto.FreeBoard;
-import com.iot.dto.Friend;
 import com.iot.dto.Letter;
-import com.iot.service.FriendService;
 import com.iot.service.LetterService;
 
 @Controller
@@ -38,7 +35,8 @@ public class LetterController {
 			mv.addObject("msg", "로그인 후 이용해주세요 :)");
 			return mv;
 		}
-		
+		if(params.get("toId") != null)
+			mv.addObject("toId", String.valueOf(params.get("toId")));
 		mv.setViewName("letter/write");
 		return mv;
 	}

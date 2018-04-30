@@ -65,11 +65,6 @@
 			}
 		});
 	}
-
-	function redirectToFB() {
-		window.opener.location.href = "/new_web/friend/list.do";
-		self.close();
-	}
 </script>
 </head>
 <body>

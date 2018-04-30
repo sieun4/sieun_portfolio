@@ -95,7 +95,7 @@ body {
 	}
 
 	function popupOpen() {
-		var popUrl = "<c:url value="/friend/list.do"/>"; //팝업창에 출력될 페이지 URL
+		var popUrl = "<c:url value="/friend/list.do?letter="/>" + "letter"; //팝업창에 출력될 페이지 URL
 		var popOption = "width=400, height=400, resizable=no, scrollbars=no, status=no;"; //팝업창 옵션(optoin)
 		window.open(popUrl, "", popOption);
 	}
@@ -124,8 +124,8 @@ body {
 									<legend>편지쓰기</legend>
 
 									<c:if test="${msg != null }">
-								${msg }
-							</c:if>
+										${msg }
+									</c:if>
 
 									<!-- board write table -->
 									<table summary="표 내용은 편지쓰기 박스입니다." class="board_write_table">
@@ -138,9 +138,19 @@ body {
 											<tr>
 												<th class="tright"><label for="board_write_toId">받는
 														사람 ID</label></th>
-												<td class="tleft"><input type="text" name="toId"
-													id="board_write_toId" title="받는 사람 ID 입력박스"
-													class="input_100" /> <input type="button"
+												<td class="tleft">
+												<c:choose>
+													<c:when test="${toId != null}">
+														<input type="text" name="toId" id="board_write_toId" 
+															value="${toId }" title="받는 사람 ID 입력박스" class="input_100" />
+													</c:when>
+													<c:otherwise>
+														<input type="text" name="toId"
+														id="board_write_toId" title="받는 사람 ID 입력박스"
+														class="input_100" /> 
+													</c:otherwise>
+												</c:choose>
+												<input type="button"
 													onclick="popupOpen()" value="주소록" title="주소록" /></td>
 											</tr>
 											<tr>

@@ -37,51 +37,47 @@ body {
 
 <script type="text/javascript">
 	// 자바 스크립트 영역
+	
 	// 수정
-	function goUpdate() {
-		var frm = document.readForm;
-		frm.action = "/new_web/friend/goUpdate.do";
-		frm.method = 'POST';
-		frm.submit();
-	}
-
-	// 삭제
-	function doDelete(seq) {
-		if (confirm("해당 친구를 주소록에서 삭제하시겠습니까?")) {
-			$.ajax({ // ajax라는 함수 호출. {}안은 전부 매개변수
-				url : '/new_web/friend/delete.do', // 호출할 URL
-				type : "post", // GET / POST 방식
-				data : {
-					'seq' : seq
-				}, // 파라미터 {'이름', 변수(var)}
-				// 바로 값을 넣을 땐 {'이름', '값'}
-				success : function(result, textStatus, jqXHR) { // 콜백 함수
-					if (result == 1) { // 정상적으로 삭제되었을 경우
-						window.opener.location.href = "/new_web/friend/list.do";
-						self.close();
-					} else { // 삭제하던 중 오류가 발생한 경우
-						alert("오류가 발생했습니다. 관리자에게 문의해 주세요."); // 알림창
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(jqXHR);
-					console.log(textStatus);
-					console.log(errorThrown);
-				}
-			});
+	function doUpdate() {
+		var seq = $("#seq").val();
+		var friendName = $("#friendName").val();
+		
+		if(friendName == undefined || friendName == ''){
+			alert("친구이름을 입력하세요.");
+			$("#friendName").focus();
+			return;
 		}
+		
+		$.ajax({ // ajax라는 함수 호출. {}안은 전부 매개변수
+			url : '/new_web/friend/doUpdate.do', // 호출할 URL
+			type : "post", // GET / POST 방식
+			data : {
+				'seq' : seq,
+				'friendName' : friendName,
+				'memo' : $("#memo").val()
+			}, // 파라미터 {'이름', 변수(var)}
+			// 바로 값을 넣을 땐 {'이름', '값'}
+			success : function(result, textStatus, jqXHR) { // 콜백 함수
+				if (result == 1) { 					// 정상적으로 수정 완료
+					window.opener.location.href = "/new_web/friend/list.do";
+					self.close();
+				} else { 							// 오류가 났을 경우
+					alert("오류가 발생했습니다. 관리자에게 문의해 주세요.");
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+				console.log(textStatus);
+				console.log(errorThrown);
+			}
+		});
 	}
 
 	$(document).ready(function() {
 		//Tab
 		$("#tabs").tabs();
 	});
-	
-	// 편지쓰기
-	function goWrite() {
-		window.opener.location.href = "/new_web/letter/goWrite.do?toId=${friend.friendId}";
-		self.close();
-	}
 </script>
 </head>
 <body>
@@ -99,7 +95,7 @@ body {
 						<!-- board_area -->
 						<div class="board_area">
 							<form name="readForm">
-								<input type="hidden" name="seq" value="${friend.seq }" />
+								<input type="hidden" id="seq" name="seq" value="${friend.seq }" />
 								<fieldset>
 									<legend>친구 정보</legend>
 
@@ -113,29 +109,31 @@ body {
 										<tbody>
 											<tr>
 												<th>친구 아이디</th>
-												<td colspan="5"><c:out value="${friend.friendId }" /></td>
+												<td><input type="text" name="friendId"
+													id="friendId" readonly="readonly" value="${friend.friendId }"
+													title="친구 아이디 입력박스" class="input_380" /></td>
 											</tr>
 											<tr>
 												<th>친구 이름</th>
-												<td colspan="5"><c:out value="${friend.friendName }" /></td>
+												<td><input type="text" name="friendName"
+													id="friendName" value="${friend.friendName }"
+													title="친구 이름 입력박스" class="input_380" /></td>
 											</tr>
 											<tr>
 												<th>메모</th>
-												<td><c:out value="${friend.memo }" /></td>
+												<td><input type="text" name="memo"
+													id="memo" value="${friend.memo }"
+													title="메모 입력박스" class="input_380" /></td>
 											</tr>
 										</tbody>
 									</table>
 									<br />
 
 									<div class="btn_bottom">
-										<div class="btn_bottom_left">
-											<input type="button" onclick="goWrite()"
-												value="편지쓰기" title="편지쓰기" />
-										</div>
+										
 										<div class="btn_bottom_right">
-											<input type="button" onclick="goUpdate()" value="수정"
-												title="수정" /> <input type="button" onclick="doDelete(${friend.seq})"
-												value="삭제" title="삭제" />
+											<input type="button" onclick="doUpdate()" value="완료"
+												title="완료" /> 
 										</div>
 									</div>
 									<!-- //board detail table -->
