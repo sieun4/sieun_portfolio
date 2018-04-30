@@ -427,7 +427,6 @@ public class FreeBoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		mv.addObject("currentPageNo", params.get("currentPageNo"));
 		mv.addObject("seq", Integer.parseInt(params.get("seq")));
 		RedirectView rv = new RedirectView("/new_web/free/read.do");

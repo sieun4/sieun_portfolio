@@ -34,43 +34,43 @@ body {
 	src="<c:url value="/resources/jquery/js/jquery-migrate-1.4.1.js" />"></script>
 
 <script type="text/javascript">
-		// 자바 스크립트 영역
-		$(document).ready(function() {
-			//Tab
-			$("#tabs").tabs();
-		});
+	// 자바 스크립트 영역
+	$(document).ready(function() {
+		//Tab
+		$("#tabs").tabs();
+	});
 
-		function doWrite() {
-			var title = document.getElementById("board_write_title").value;
-			// 	var contents = document.getElementById("contents").value;
-			var contents = CKEDITOR.instances['contents'].getData();
+	function doWrite() {
+		var title = document.getElementById("board_write_title").value;
+		// 	var contents = document.getElementById("contents").value;
+		var contents = CKEDITOR.instances['contents'].getData();
 
-			//		유효성 검사는 하나의 항목마다 전부 if로 씀 (if-else if 안 씀)
-			if (title == undefined || title == '') { // title == undefined : title가 정의되지 않은 경우
-				alert("제목을 입력하세요.");
-				$("#board_write_title").focus();
-				// 		= document.getElementById("j_userId").focus(); 	// focus() 함수 실행하면 그 곳으로 가서 커서가 깜빡임
-				return;
-			}
-			if (contents == undefined || contents == '') {
-				alert("내용을 입력하세요.");
-				$("#contents").focus();
-				return;
-			}
-
-			var frm = document.writeForm;
-			//		frm = $('form[name=joinForm]')[0]; (위 문장과 같음)
-			frm.action = '/new_web/free/doWrite.do';
-			// 	frm.action = '<c:url value="/write.do"/>'
-			frm.method = 'post';
-			frm.submit();
+		//		유효성 검사는 하나의 항목마다 전부 if로 씀 (if-else if 안 씀)
+		if (title == undefined || title == '') { // title == undefined : title가 정의되지 않은 경우
+			alert("제목을 입력하세요.");
+			$("#board_write_title").focus();
+			// 		= document.getElementById("j_userId").focus(); 	// focus() 함수 실행하면 그 곳으로 가서 커서가 깜빡임
+			return;
 		}
-	</script>
+		if (contents == undefined || contents == '') {
+			alert("내용을 입력하세요.");
+			$("#contents").focus();
+			return;
+		}
+
+		var frm = document.writeForm;
+		//		frm = $('form[name=joinForm]')[0]; (위 문장과 같음)
+		frm.action = '/new_web/free/doWrite.do';
+		// 	frm.action = '<c:url value="/write.do"/>'
+		frm.method = 'post';
+		frm.submit();
+	}
+</script>
 <script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
 </head>
 <body>
 	<div id="tabs" align="center">
-		<br/>자유게시판
+		<br />자유게시판
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">
@@ -117,7 +117,7 @@ body {
 												</td>
 											</tr>
 											<tr>
-												<th class="tright"><label for="board_write_title">내용</label></th>
+												<th class="tright"><label for="board_write_content">내용</label></th>
 												<td class="tleft">
 													<div class="editer">
 														<p>
@@ -135,6 +135,12 @@ body {
 												<th class="tright"><label for="board_write_file">첨부파일</label></th>
 												<td class="tleft"><input type="file" name="file" /><br />
 													<input type="file" name="file" /></td>
+											</tr>
+											<tr>
+												<th class="tright"><label for="board_write_tag">태그(,로 구분)</label></th>
+												<td class="tleft"><input type="text" name="tag"
+													id="board_write_tag" title="태그 입력박스" class="input_550" />
+												</td>
 											</tr>
 										</tbody>
 									</table>
