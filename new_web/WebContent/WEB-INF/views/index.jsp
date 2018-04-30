@@ -135,7 +135,7 @@ var ctx = "<%=request.getContextPath()%>";
 				<header class="major">
 				<h2>관리자에게 :)</h2>
 				<p>
-					오류를 발견하셨다면 제보해 주세요!<br /> ps. 디자인(폰트, 컬러 등)에 대한 지적은 잠시 넣어두어요....
+					오류를 발견하셨다면 제보해 주세요!
 				</p>
 				</header>
 				<div class="row">
@@ -171,7 +171,7 @@ var ctx = "<%=request.getContextPath()%>";
 							<section id="hero" class="6u 12u(narrower)"> <a
 								class="button">SIEUN</a>
 						</div>
-					</section>
+						</div>
 					</section>
 				</div>
 			</div>
@@ -182,8 +182,6 @@ var ctx = "<%=request.getContextPath()%>";
 				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 			</ul>
 		</div>
-	</div>
-
 	</div>
 </body>
 </html>
