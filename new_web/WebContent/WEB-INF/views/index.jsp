@@ -26,7 +26,8 @@
 <script src='<c:url value="/resources/assets/js/main.js"/>'></script>
 
 <script type="text/javascript">
-var ctx = "<%=request.getContextPath()%>";
+var ctx = "<%=request.getContextPath()%>
+	";
 	jQuery(document).ready(function() {
 		//             $("#accordion").collapse();
 
@@ -57,6 +58,22 @@ var ctx = "<%=request.getContextPath()%>";
 </head>
 <body class="homepage">
 	<div id="page-wrapper">
+
+		<!-- 구글 웹 번역기 -->
+		<div id="google_translate_element" align="center"></div>
+		<script type="text/javascript">
+			function googleTranslateElementInit() {
+				new google.translate.TranslateElement(
+						{
+							pageLanguage : 'ko',
+							includedLanguages : 'en,ja,zh-CN,zh-TW',
+							layout : google.translate.TranslateElement.InlineLayout.HORIZONTAL
+						}, 'google_translate_element');
+			}
+		</script>
+		<script type="text/javascript"
+			src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 
 		<!-- Header -->
 		<div id="header-wrapper">
@@ -134,9 +151,7 @@ var ctx = "<%=request.getContextPath()%>";
 			<div id="footer" class="container">
 				<header class="major">
 				<h2>관리자에게 :)</h2>
-				<p>
-					오류를 발견하셨다면 제보해 주세요!
-				</p>
+				<p>오류를 발견하셨다면 제보해 주세요!</p>
 				</header>
 				<div class="row">
 					<section class="6u 12u(narrower)">
@@ -171,7 +186,7 @@ var ctx = "<%=request.getContextPath()%>";
 							<section id="hero" class="6u 12u(narrower)"> <a
 								class="button">SIEUN</a>
 						</div>
-						</div>
+					</div>
 					</section>
 				</div>
 			</div>
