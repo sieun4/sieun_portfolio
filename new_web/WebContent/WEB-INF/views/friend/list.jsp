@@ -115,9 +115,8 @@ body {
 									<tbody>
 										<c:forEach items="${result }" var="f">
 											<tr>
-												<td><a href="#" onclick="readPopup(${f.seq})">
-															<b><c:out value="${f.friend_id}" /></b></a>
-					</td>
+												<td><a href="#" onclick="readPopup(${f.seq})"> <b><c:out
+																value="${f.friend_id}" /></b></a></td>
 												<td><c:out value="${f.friend_name}" /></td>
 												<td><c:out value="${f.memo}" /></td>
 											</tr>
