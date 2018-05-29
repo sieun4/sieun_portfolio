@@ -14,14 +14,12 @@
 	href="<c:url value="/resources/assets/css/main.css"/>" />
 <!--[if lte IE 8]><link rel="stylesheet" href='<c:url value="/resources/assets/css/ie8.css"/>' /><![endif]-->
 <!--[if lte IE 9]><link rel="stylesheet" href='<c:url value="/resources/assets/css/ie9.css"/>' /><![endif]-->
-<link href="https://fonts.googleapis.com/css?family=Gamja+Flower"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Gamja+Flower" rel="stylesheet">
 
 </head>
 <body class="homepage">
 	<div id="page-wrapper">
-		<header class="major">
-		<c:if test="${count != 0}">
+		<header class="major"> <c:if test="${count != 0}">
 			<h2>
 				<font color="violet">${sessionScope.nickname }(${sessionScope.userId })</font>님에게
 				<font color="red">${count }</font>건의 새편지가 도착했어요!
@@ -69,15 +67,14 @@
 			</div>
 		</div>
 
-<!-- 		<div align="center"> -->
-<!-- 			<p><br/><br/>저 여기있어요...★</p> -->
- 			<!-- q = 원하는 주소 구글맵에서 찾아서 주소명넣으면 됨  -->
-<!-- 			<iframe -->
-<!-- 				src="https://www.google.com/maps/embed/v1/place?q=더조은IT 아카데미&amp;key=AIzaSyBSFRN6WWGYwmFi498qXXsD2UwkbmD74v4" -->
-<!-- 				frameborder="0" scrolling="no" marginheight="0" marginwidth="0" -->
-<!-- 				style="width: 50%; height: 300px;"></iframe> -->
-<!-- 		</div> -->
-
+		<!-- 		<div align="center"> -->
+		<!-- 			<p><br/><br/>저 여기있어요...★</p> -->
+		<!-- q = 원하는 주소 구글맵에서 찾아서 주소명넣으면 됨  -->
+		<!-- 			<iframe -->
+		<!-- 				src="https://www.google.com/maps/embed/v1/place?q=더조은IT 아카데미&amp;key=AIzaSyBSFRN6WWGYwmFi498qXXsD2UwkbmD74v4" -->
+		<!-- 				frameborder="0" scrolling="no" marginheight="0" marginwidth="0" -->
+		<!-- 				style="width: 50%; height: 300px;"></iframe> -->
+		<!-- 		</div> -->
 
 	</div>
 	<!-- Scripts -->

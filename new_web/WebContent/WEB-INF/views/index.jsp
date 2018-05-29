@@ -29,20 +29,14 @@
 var ctx = "<%=request.getContextPath()%>
 	";
 	jQuery(document).ready(function() {
-		//             $("#accordion").collapse();
-
 		// 초기 페이지 세팅
 		$("#demoFrame").attr("src", '<c:url value="/home.do" />');
-		//$("span",".gheader").html('Intro Page');
-
 		$(".list-group-item").on("click", function() {
-			//$("span",".gheader").html( $(this).text() );
 		});
 	});
 
 	function resize(obj) { // 글 길게 썼을 때 스크롤 안 생기게 
-		obj.style.height = obj.contentWindow.document.body.scrollHeight + 50
-				+ 'px';
+		obj.style.height = obj.contentWindow.document.body.scrollHeight + 100 + 'px';
 	}
 
 	function doLogout() {
@@ -59,7 +53,7 @@ var ctx = "<%=request.getContextPath()%>
 <body class="homepage">
 	<div id="page-wrapper">
 
-		<!-- 구글 웹 번역기 -->
+		<!-- 구글 웹 번역기 시작 -->
 		<div id="google_translate_element" align="center"></div>
 		<script type="text/javascript">
 			function googleTranslateElementInit() {
@@ -73,7 +67,7 @@ var ctx = "<%=request.getContextPath()%>
 		</script>
 		<script type="text/javascript"
 			src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+		<!-- 구글 웹 번역기 끝 -->
 
 		<!-- Header -->
 		<div id="header-wrapper">
@@ -114,10 +108,10 @@ var ctx = "<%=request.getContextPath()%>
 
 					<c:choose>
 						<c:when test="${sessionScope.userId != null}">
-							<li><a href="" onclick="doLogout()">로그 아웃</a></li>
+							<li><a href="" onclick="doLogout()">로그 아웃</a></li>				<!-- 로그인 했을 경우 -->
 						</c:when>
 						<c:otherwise>
-							<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>
+							<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>	<!-- 로그인 안 했을 경우 -->
 						</c:otherwise>
 					</c:choose>
 				</ul>
@@ -141,8 +135,7 @@ var ctx = "<%=request.getContextPath()%>
 		<div align="center">
 			<br />
 			<iframe id="demoFrame" name="demoFrame" frameborder="0"
-				marginheight="0" marginwidth="0" style="width: 70%; height: 100%;"
-				onload="resize(this)"></iframe>
+				marginheight="0" marginwidth="0" style="width: 70%; height: 100%;" onload="resize(this)"></iframe>
 			<br />
 		</div>
 
