@@ -24,6 +24,7 @@ import com.iot.dto.Comments;
 import com.iot.service.AttachmentService;
 import com.iot.service.CommentsService;
 import com.iot.service.FreeBoardService;
+import com.iot.service.TagService;
 import com.iot.util.FileUtil;
 
 @Controller
@@ -39,6 +40,9 @@ public class FreeBoardController {
 	
 	@Autowired
 	CommentsService cService;
+	
+	@Autowired
+	TagService tService;
 	
 	@Autowired
 	FileUtil fileUtil;
