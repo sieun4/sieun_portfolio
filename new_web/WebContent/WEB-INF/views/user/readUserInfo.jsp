@@ -22,6 +22,7 @@
 			alert(msg);
 		}
 	}
+	
 	function doQuitService() {
 		var password = document.getElementById("password").value;
 		if (password == undefined || password == '') {
@@ -36,6 +37,7 @@
 			frm.submit();
 		}
 	}
+	
 	function goEditUser() {
 		var password = document.getElementById("password").value;
 		if (password == undefined || password == '') {

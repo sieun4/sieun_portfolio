@@ -35,6 +35,7 @@
 		frm.method = "post";
 		frm.submit();
 	}
+	
 	function init() {
 		var msg = '${msg}';
 		if (msg != '') {
@@ -133,6 +134,5 @@
 
 	</div>
 	<!-- //wrap -->
-	</div>
 </body>
 </html>
