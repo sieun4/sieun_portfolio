@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
 <mapper namespace="com.iot.dao.LetterDao"> <!-- DAO 구현체 -->
+
+	<!-- 편지 쓰기 -->
 	<insert id="write" parameterType="Letter">
 		INSERT INTO iot.letter 
 		(to_id, to_nickname, title, text, date, from_id, from_nickname)
 		VALUES 
 		(#{toId}, #{toNickname}, #{title}, #{text}, NOW(), #{fromId}, #{fromNickname})
 	</insert>
+	
+	<!-- 편지함 편지 카운트 (편지 목록을 위해) -->
 	<select id="count" resultType="int">
 		SELECT COUNT(*) FROM iot.letter
 		WHERE 1=1
@@ -40,13 +45,15 @@
 			AND text LIKE CONCAT('%', #{searchText}, '%')
 		</if>
 	</select>
+	
+	<!-- 편지함 -->
 	<select id="list" parameterType="HashMap" resultType="HashMap">
 		SELECT seq, to_id, to_nickname, title, text, DATE_FORMAT(date, '%Y-%m-%d %H:%i') as date, from_id, from_nickname, hit FROM iot.letter
 		WHERE 1=1
-		<if test="fromId != null">
+		<if test="fromId != null">	<!-- 보낸 편지함 -->
 			AND from_id = #{fromId}
 		</if>
-		<if test="toId != null">
+		<if test="toId != null">	<!-- 받은 편지함 -->
 			AND to_id = #{toId}
 		</if>
 		<if test="(searchType != null and searchType == 'all') and fromId != null and searchText != ''">
@@ -80,13 +87,20 @@
 		<!-- 매개변수를 (int startArticleNo, int pageArticle)로 받았을 경우 #{0}, #{1} -->
 		<!-- 쿼리가 길어지면 0, 1, 2, 3... 으로 알아보기 어렵기 때문에 주로 HashMap으로 받아서 씀 -->
 	</select>
+	
+	<!-- 편지 읽기 -->
 	<select id="read" resultType="Letter">
 		SELECT * FROM iot.letter WHERE seq = #{seq}
 	</select>
+	
+	<!-- 새 편지 읽었을 때 읽은 편지로 구분하기 -->
 	<update id="newLetter" parameterType="int">
 		UPDATE iot.letter SET hit = '읽음' WHERE seq = #{seq}
 	</update>
+	
+	<!-- 새편지 갯수 카운트 -->
 	<select id="newCnt" parameterType="String" resultType="int">
 		SELECT COUNT(*) FROM iot.letter WHERE to_id = #{userId} AND hit = '읽지않음'
 	</select>
+	
 </mapper>

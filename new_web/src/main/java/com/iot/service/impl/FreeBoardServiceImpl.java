@@ -40,17 +40,17 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 	@Autowired
 	FileUtil fileUtil;
 
-	@Override	// 게시글 수 count
+	@Override	// 게시글 수 카운트
 	public int count(HashMap<String, Object> params) {	
 		return dao.count(params);
 	}
 
-	@Override
+	@Override	// 게시글 목록
 	public ArrayList<FreeBoard> paging(HashMap<String, Object> params) {
 		return dao.paging(params);
-	}
+	}	
 
-	@Override
+	@Override	// 게시글 읽기
 	public FreeBoard read(int seq) throws Exception {
 		// 특정 게시글의 조회수 증가
 		int result = dao.updateHits(seq);
@@ -60,9 +60,9 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		// 특정 게시글 (조회수 증가 후) 조회
 		FreeBoard board = dao.findBySeq(seq);
 		return board;
-	}
+	}	
 
-	@Override
+	@Override	// 글 쓰기
 	public void write(FreeBoard board, List<MultipartFile> files) {
 		dao.write(board);						// 게시글 DB에 입력
 		if(board.getHasFile().equals("1")) {	// 파일이 있는 경우
@@ -82,7 +82,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		}
 	}
 
-	@Override
+	@Override	// 게시글 삭제
 	public void delete(int seq, String userId, String password) throws Exception {
 		// 사용자가 입력한 비밀번호 암호화
 		String encryptedPw = uDao.encPw(password);
@@ -101,7 +101,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 				if(aResult != 1) throw new Exception("DELETE_ANOMALY");	// 삭제 이상	
 				fileUtil.delete(a);	// 저장된 실제 첨부파일 삭제하기
 			}
-			// 댓글 삭제하기
+			// 댓글 삭제
 			cDao.deleteAll(seq);
 		}
 		else {	// 비밀번호가 다름
@@ -109,7 +109,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		}
 	}
 
-	@Override
+	@Override	// 글 수정하기 위해 비밀번호 비교하고 게시글 불러오기
 	public FreeBoard goUpDate(int seq, String userId, String password, String pass) throws Exception {
 		// 사용자가 입력한 비밀번호 암호화
 		String encryptedPw = uDao.encPw(password);
@@ -123,7 +123,7 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		return board;	
 	}
 
-	@Override
+	@Override	// 수정 완료된 글 저장
 	public int update(FreeBoard board, List<MultipartFile> files) throws Exception {
 		int result = dao.update(board);			// FreeBoard DB Update
 		if(result != 1) throw new AnomalyException(1, result); // (기대값, 실제값)
@@ -146,12 +146,12 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		return result;	
 	}
 	
-	@Override	// seq로 FreeBoad 불러오기
+	@Override	// 게시글 정보 가져오기 (읽기)
 	public FreeBoard findBySeq(int seq) {	
 		return dao.findBySeq(seq);
 	}
 
-	@Override
+	@Override	// 첨부파일 삭제
 	public int delAttachedFile(int attachSeq) throws Exception {
 		Attachment att = aDao.download(attachSeq);	// 첨부파일 정보 가져오기
 		int seq = att.getAttachDocSeq();			// 게시글 seq 가져오기

@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	LetterDao lDao;
 	
-	@Override
+	@Override	// 비밀번호 비교
 	public boolean comparePw(String userId, String comparePw) throws Exception {
 		int result = dao.chkId(userId);							// ID가 존재하는지 확인
 		if(result != 1) throw new Exception("NOT_FOUND_USER_ID");
@@ -34,24 +34,24 @@ public class UserServiceImpl implements UserService {
 		return compare.equals(user.getUserPw());
 	}
 
-	@Override
+	@Override	// 회원 정보 가져오기
 	public User getUser(String userId) {
 		return dao.getUser(userId);
 	}
 
-	@Override
+	@Override	// 회원 정보 저장 (가입)
 	public int join(User user) throws Exception {
 		int result = dao.join(user);
 		if(result != 1) throw new AnomalyException(1, result); // (기대값, 실제값)
 		return result;
 	}
 
-	@Override
+	@Override	// 해당 ID 확인
 	public int chkId(String userId) {
 		return dao.chkId(userId);
 	}
 
-	@Override
+	@Override	// 회원 삭제 (탈퇴)
 	public void delete(String userId, String comparePw) throws Exception {
 		// 사용자가 입력한 비밀번호 암호화
 		String encryptedPw = dao.encPw(comparePw);	
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 		}		
 	}
 
-	@Override
+	@Override	// 회원 정보 수정을 위해 비밀번호 확인, 정보 가져오기
 	public User goEdit(String userId, String comparePw) throws Exception {
 		String encryptedPw = dao.encPw(comparePw);		// 사용자가 입력한 비밀번호 암호화
 		User user = dao.getUser(userId);				// 수정할 회원 정보
@@ -76,19 +76,19 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	@Override
+	@Override	// 수정된 회원 정보 저장
 	public int editUser(User user) throws Exception {
 		int result = dao.editUser(user);
 		if(result != 1) throw new AnomalyException(1, result); // (기대값, 실제값)
 		return result;
 	}
 
-	@Override
+	@Override	// 회원 수 카운트
 	public int count(HashMap<String, Object> params) {
 		return dao.count(params);
 	}
 
-	@Override
+	@Override	// 회원 목록
 	public ArrayList<User> list(HashMap<String, String> params) {
 		return dao.list(params);
 	}

@@ -21,25 +21,25 @@ public class CommentsServiceImpl implements CommentsService {
 	@Autowired
 	FreeBoardDao fDao;
 
-	@Override
+	@Override	// 댓글 목록
 	public ArrayList<Comments> getComment(int commentDocSeq) {
 		return dao.getComment(commentDocSeq);
 	}
 
-	@Override
+	@Override	// 댓글 쓰기
 	public int write(Comments c) throws Exception {
-		int hasCo = fDao.writeHasCo(c.getCommentDocSeq());
+		int hasCo = fDao.writeHasCo(c.getCommentDocSeq());	// 댓글 갯수 수정
 		if(hasCo != 1) throw new Exception("댓글 갯수 수정 오류!!!");
-		int result = dao.write(c);
+		int result = dao.write(c);		// 댓글 저장
 		if(result != 1) throw new Exception("댓글 저장 오류!!!!");		// 오류나면 콘솔에 출력
 		return result;
 	}
 
-	@Override
+	@Override	// 댓글 삭제
 	public int delete(int commentSeq, int seq) throws Exception {
-		int hasCo = fDao.delHasCo(seq);
+		int hasCo = fDao.delHasCo(seq);		// 댓글 갯수 수정
 		if(hasCo != 1) throw new Exception("댓글 갯수 수정 오류!!!!");
-		int result = dao.delete(commentSeq);
+		int result = dao.delete(commentSeq);	// 댓글 삭제
 		if(result != 1) throw new Exception("댓글 삭제 오류!!!!");
 		return result;
 	}

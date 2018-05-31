@@ -22,4 +22,5 @@ public interface UserDao {
 	public int count(HashMap<String, Object> params);
 
 	public ArrayList<User> list(HashMap<String, String> params);
+	
 }

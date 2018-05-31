@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
 <mapper namespace="com.iot.dao.FriendDao"> <!-- DAO 구현체 -->
+
+	<!-- 친구 수 카운트 (친구 목록을 위해) -->
 	<select id="count" resultType="int">
 		SELECT COUNT(*) FROM iot.friend
 		WHERE user_id = #{userId}
-		<if
+		<if	<!-- 검색 -->
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
-			OR friend_name LIKE CONCAT('%', #{searchText}, '%')
-			OR memo LIKE CONCAT('%', #{searchText}, '%'))
+			OR
+			friend_name LIKE CONCAT('%', #{searchText}, '%')
+			OR memo LIKE
+			CONCAT('%', #{searchText}, '%'))
 		</if>
-		<if
+		<if	<!-- 친구 아이디로 검색 -->
 			test="(searchType != null and searchType == 'friendId') and searchText != ''">
 			AND friend_id LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if
+		<if	<!-- 친구 이름으로 검색 -->
 			test="(searchType != null and searchType == 'friendName') and searchText != ''">
 			AND friend_name LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if
+		<if	<!-- 메모로 검색 -->
 			test="(searchType != null and searchType == 'memo') and searchText != ''">
 			AND memo LIKE CONCAT('%', #{searchText}, '%')
 		</if>
 	</select>
-	
+
+	<!-- 친구 목록 -->
 	<select id="list" parameterType="HashMap" resultType="HashMap">
 		SELECT * FROM iot.friend
 		WHERE user_id = #{userId}
-		<if
+		<if <!-- 검색 -->
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
-			OR friend_name LIKE CONCAT('%', #{searchText}, '%')
-			OR memo LIKE CONCAT('%', #{searchText}, '%'))
+			OR
+			friend_name LIKE CONCAT('%', #{searchText}, '%')
+			OR memo LIKE
+			CONCAT('%', #{searchText}, '%'))
 		</if>
-		<if
+		<if <!-- 친구 아이디로 검색 -->
 			test="(searchType != null and searchType == 'friendId') and searchText != ''">
 			AND friend_id LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if
+		<if <!-- 친구 이름으로 검색 -->
 			test="(searchType != null and searchType == 'friendName') and searchText != ''">
 			AND friend_name LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if
+		<if <!-- 메모로 검색 -->
 			test="(searchType != null and searchType == 'memo') and searchText != ''">
 			AND memo LIKE CONCAT('%', #{searchText}, '%')
 		</if>
@@ -51,29 +59,38 @@
 		<!-- 매개변수를 (int startArticleNo, int pageArticle)로 받았을 경우 #{0}, #{1} -->
 		<!-- 쿼리가 길어지면 0, 1, 2, 3... 으로 알아보기 어렵기 때문에 주로 HashMap으로 받아서 씀 -->
 	</select>
-	
+
+	<!-- 친구 등록 -->
 	<insert id="register" parameterType="Friend">
-		INSERT INTO iot.friend 
+		INSERT INTO iot.friend
 		(user_id, friend_id, friend_name, memo)
-		VALUES 
-		(#{userId}, #{friendId}, #{friendName}, #{memo})
+		VALUES
+		(#{userId}, #{friendId},#{friendName}, #{memo})
 	</insert>
-	
+
+	<!-- 이미 등록한 친구 아이디인지 확인 -->
 	<select id="chkId" resultType="int">
-		SELECT COUNT(*) FROM iot.friend WHERE user_id = #{1} AND friend_id = #{0}
-	</select>	
-	
-	<select id="getData" resultType="Friend">
-		SELECT * FROM iot.friend WHERE seq = #{seq}
+		SELECT COUNT(*) FROM iot.friend
+		WHERE user_id = #{1} AND friend_id = #{0}
 	</select>
-	
+
+	<!-- 등록된 친구 정보 불러오기 -->
+	<select id="getData" resultType="Friend">
+		SELECT * FROM iot.friend WHERE
+		seq = #{seq}
+	</select>
+
+	<!-- 친구 삭제 -->
 	<delete id="delete" parameterType="int">
-		DELETE FROM iot.friend WHERE seq = #{seq}
+		DELETE FROM iot.friend WHERE
+		seq = #{seq}
 	</delete>
-	
+
+	<!-- 친구 정보 수정 -->
 	<update id="update" parameterType="Friend">
 		UPDATE iot.friend
-		SET friend_name = #{friendName}, memo = #{memo} 
+		SET friend_name = #{friendName}, memo = #{memo}
 		WHERE seq = #{seq}
 	</update>
+	
 </mapper>

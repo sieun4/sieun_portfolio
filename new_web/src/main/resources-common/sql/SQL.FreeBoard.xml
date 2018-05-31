@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
 <mapper namespace="com.iot.dao.FreeBoardDao"> <!-- DAO 구현체 -->
 
 	<!-- 페이징을 위해 자유게시판 글 갯수 카운트 -->
@@ -72,11 +73,13 @@
 		<!-- 쿼리가 길어지면 0, 1, 2, 3... 으로 알아보기 어렵기 때문에 주로 HashMap으로 받아서 씀 -->
 	</select>
 
+	<!-- 글 조회수 올리기 -->
 	<update id="updateHits" parameterType="int">
 		UPDATE iot.free_board SET
 		hits = hits + 1 WHERE seq = #{seq}
 	</update>
 
+	<!-- 게시글 읽기 -->
 	<select id="findBySeq" resultType="FreeBoard">
 		SELECT seq, user_id, nickname,
 		title, contents, DATE_FORMAT(write_date, '%Y-%m-%d %H:%i') as
@@ -84,6 +87,7 @@
 		FROM iot.free_board WHERE seq = #{seq}
 	</select>
 
+	<!-- 글 작성 -->
 	<insert id="write" parameterType="FreeBoard" useGeneratedKeys="true">
 		<!-- PK가 자동 생성됨 -->
 		INSERT INTO iot.free_board(user_id, nickname, title, contents,
@@ -91,30 +95,35 @@
 		VALUES (#{userId}, #{nickname}, #{title}, #{contents}, #{hasFile}, now())
 		<!-- keyProperty="컬럼명" -->
 		<selectKey resultType="int" keyProperty="seq" order="AFTER">
-			SELECT LAST_INSERT_ID()	<!-- 마지막에 넣은 seq 가져오기 -->
+			SELECT LAST_INSERT_ID()	<!-- 마지막에 넣은 seq 가져오기 (첨부파일 DB 저장을 위해서) -->
 		</selectKey>
 	</insert>
 
+	<!-- 글 삭제 -->
 	<delete id="delete" parameterType="int">
 		DELETE FROM iot.free_board
 		WHERE seq = #{seq}
 	</delete>
 
+	<!-- 글 수정 -->
 	<update id="update" parameterType="FreeBoard">
 		UPDATE iot.free_board
 		SET title = #{title}, contents = #{contents}, has_file = #{hasFile}
 		WHERE seq = #{seq}
 	</update>
 	
+	<!-- 댓글 작성시 댓글 갯수 올리기 -->
 	<update id="writeHasCo" parameterType="int">
 		UPDATE iot.free_board
 		SET has_comment = has_comment + 1
 		WHERE seq = #{seq}	
 	</update>
 	
+	<!-- 댓글 삭제시 댓글 갯수 줄이기 -->
 	<update id="delHasCo" parameterType="int">
 		UPDATE iot.free_board
 		SET has_comment = has_comment - 1
 		WHERE seq = #{seq}	
 	</update>
+	
 </mapper>

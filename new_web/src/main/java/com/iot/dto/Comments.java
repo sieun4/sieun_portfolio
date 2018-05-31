@@ -47,6 +47,5 @@ public class Comments {
 	}
 	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
-	}
-	
+	}	
 }
