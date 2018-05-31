@@ -27,7 +27,7 @@ public class FriendController {
 	@Autowired
 	UserService uService;
 
-	@RequestMapping("/friend/list.do")
+	@RequestMapping("/friend/list.do")		// 주소록 목록
 	public ModelAndView list(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/list.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -59,11 +59,9 @@ public class FriendController {
 
 		int pageBlockSize = 10;	
 		// 시작 = (현재-1) / 블럭수 * 블럭수 + 1
-		int pageBlockStart = 
-				(currentPageNo - 1) / pageBlockSize * pageBlockSize + 1;	
+		int pageBlockStart = (currentPageNo - 1) / pageBlockSize * pageBlockSize + 1;	
 		// 종료 = (현재-1) / 블럭수 * 블럭수 + 블럭수
-		int pageBlockEnd = 
-				(currentPageNo - 1) / pageBlockSize * pageBlockSize + pageBlockSize;	
+		int pageBlockEnd = (currentPageNo - 1) / pageBlockSize * pageBlockSize + pageBlockSize;	
 		// 종료값이 총페이지수보다 크거나 같으면 총페이지수
 		pageBlockEnd = (pageBlockEnd >= totalPage) ? totalPage : pageBlockEnd; 
 
@@ -72,7 +70,6 @@ public class FriendController {
 		p.put("pageArticle", pageArticle);
 
 		ArrayList<Friend> result = service.list(p);
-
 		mv.addObject("result", result);
 		mv.addObject("totalArticle", totalArticle);
 		mv.addObject("totalPage", totalPage);
@@ -83,10 +80,8 @@ public class FriendController {
 		mv.addObject("searchType", params.get("searchType"));
 		mv.addObject("searchText", params.get("searchText"));
 		
-		if(params.get("letter") != null)
-			mv.setViewName("friend/letterAddress");
-		else
-			mv.setViewName("/friend/list");
+		if(params.get("letter") != null) mv.setViewName("friend/letterAddress");
+		else mv.setViewName("/friend/list");
 		return mv;
 	}
 
@@ -107,7 +102,7 @@ public class FriendController {
 		return mv;
 	}
 	
-	@RequestMapping("/friend/doRegister.do")
+	@RequestMapping("/friend/doRegister.do")	// 주소록에 새 친구 등록
 	@ResponseBody
 	public int doRegister(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/doRegister.do - params : " + params);
@@ -121,7 +116,7 @@ public class FriendController {
 		
 		String friendId = params.get("friendId");
 		String userId = String.valueOf(session.getAttribute("userId"));
-		for(int i=0; i<friendId.length(); i++) {
+		for(int i=0; i<friendId.length(); i++){		// 아이디에 영문 대문자 사용 불가	
 			if('A' <= friendId.charAt(i) && friendId.charAt(i) <= 'Z')
 				return 2;
 		}
@@ -132,10 +127,10 @@ public class FriendController {
 		else {
 			log.debug("/friend/doRegister.do - userId : " + userId);
 
-			if(service.chkId(friendId, userId) != 0)	// 이미 등록된 친구라면 1 반환
-				return 1;	
+			if(service.chkId(friendId, userId) != 0) return 1;	// 이미 등록된 친구라면 1 반환
+				
 			try {	
-				Friend f = new Friend();
+				Friend f = new Friend();	// DB에 친구 정보 저장
 				f.setUserId(String.valueOf(session.getAttribute("userId")));
 				f.setFriendId(params.get("friendId"));
 				f.setFriendName(params.get("friendName"));
@@ -151,7 +146,7 @@ public class FriendController {
 		}
 	}
 	
-	@RequestMapping("/friend/getData.do")
+	@RequestMapping("/friend/getData.do")	// 등록된 친구 정보 보기
 	public ModelAndView getData(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/getData.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -173,7 +168,7 @@ public class FriendController {
 		return mv;
 	}
 	
-	@RequestMapping("/friend/delete.do")
+	@RequestMapping("/friend/delete.do")	// 등록된 친구 삭제하기
 	@ResponseBody
 	public int delete(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/friend/delete.do - params : " + params);
@@ -186,7 +181,7 @@ public class FriendController {
 		}
 	}
 	
-	@RequestMapping("/friend/goUpdate")
+	@RequestMapping("/friend/goUpdate")		// 등록된 친구 정보 수정 화면으로
 	public ModelAndView goUpdate(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/goUpdate.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -208,7 +203,7 @@ public class FriendController {
 		return mv;
 	}
 	
-	@RequestMapping("/friend/doUpdate")
+	@RequestMapping("/friend/doUpdate")		// 수정 완료된 친구 정보 저장
 	@ResponseBody
 	public int doUpdate(@RequestParam HashMap<String, String> params, HttpSession session) { 
 		log.debug("/friend/doUpdate.do - params : " + params);

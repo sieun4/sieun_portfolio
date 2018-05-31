@@ -50,15 +50,15 @@ public class FreeBoardController {
 	@RequestMapping("/free/list.do")	// 자유게시판 리스트
 	public ModelAndView list(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/free/list.do - params : " + params);
+		
 		// jsp에서 보낸 파라미터를 HashMap으로 받음
 		// jsp에서 값을 보내지 않으면 currentPageNo의 if문이 실행되지 않음
-
 		// 검색 기능을 사용했을 경우 DAO로 보낼 파라미터
 		HashMap<String, Object> p = new HashMap<String, Object>();
 		p.put("searchType", params.get("searchType"));
 		p.put("searchText", params.get("searchText"));
 
-		int totalArticle = service.count(p);		// 총 게시글 수
+		int totalArticle = service.count(p);	// 총 게시글 수
 		int pageArticle = 10;					// 한 페이지에 보여줄 게시글 수
 		int currentPageNo = 1;					// jsp에서 값을 받지 않았을 때의 현재페이지 기본 설정
 		if(params.containsKey("currentPageNo"))
@@ -72,11 +72,9 @@ public class FreeBoardController {
 
 		int pageBlockSize = 10;	
 		// 시작 = (현재-1) / 블럭수 * 블럭수 + 1
-		int pageBlockStart = 
-				(currentPageNo - 1) / pageBlockSize * pageBlockSize + 1;	
+		int pageBlockStart = (currentPageNo - 1) / pageBlockSize * pageBlockSize + 1;	
 		// 종료 = (현재-1) / 블럭수 * 블럭수 + 블럭수
-		int pageBlockEnd = 
-				(currentPageNo - 1) / pageBlockSize * pageBlockSize + pageBlockSize;	
+		int pageBlockEnd = (currentPageNo - 1) / pageBlockSize * pageBlockSize + pageBlockSize;	
 		// 종료값이 총페이지수보다 크거나 같으면 총페이지수
 		pageBlockEnd = (pageBlockEnd >= totalPage) ? totalPage : pageBlockEnd; 
 
@@ -87,7 +85,6 @@ public class FreeBoardController {
 		ArrayList<FreeBoard> result = service.paging(p);
 
 		ModelAndView mv = new ModelAndView();
-		
 		mv.addObject("result", result);
 		mv.addObject("totalArticle", totalArticle);
 		mv.addObject("totalPage", totalPage);
@@ -136,7 +133,7 @@ public class FreeBoardController {
 		return mv;
 	}
 	
-	@RequestMapping("/free/goWrite.do")	// 글쓰기 버튼을 눌렀을 때 보여주는 글쓰기 창
+	@RequestMapping("/free/goWrite.do")		// 글쓰기 버튼을 눌렀을 때 보여주는 글쓰기 창
 	public ModelAndView goWrite(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/free/goWrite.do - params : " + params);
 
@@ -148,12 +145,13 @@ public class FreeBoardController {
 			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
 			return mv;
 		}
-		mv.addObject("currentPageNo", params.get("currentPageNo"));
+		
+		mv.addObject("currentPageNo", params.get("currentPageNo"));		// 글쓰기 취소 했을 때를 위해 현재 페이지 값 넘기기
 		mv.setViewName("free/write");
 		return mv;
 	}
 	
-	@RequestMapping("/free/doWrite.do")
+	@RequestMapping("/free/doWrite.do")		// 글 작성 후 완료 버튼 눌렀을 때 (글 저장)
 	public ModelAndView doWrite(@RequestParam HashMap<String, String> params, 
 			HttpSession session, MultipartHttpServletRequest mReq) {
 		log.debug("/free/doWrite.do - params : " + params);
@@ -200,7 +198,7 @@ public class FreeBoardController {
 		return mv;
 	}
 	
-	@RequestMapping("/free/delete.do")
+	@RequestMapping("/free/delete.do")		// 글 삭제
 	public ModelAndView delete(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/free/delete.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -241,7 +239,7 @@ public class FreeBoardController {
 		return mv;
 	}
 	
-	@RequestMapping("/free/goUpdate.do")
+	@RequestMapping("/free/goUpdate.do")	// 글 수정하기 화면으로
 	public ModelAndView goUpdate(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/free/goUpdate.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -254,9 +252,9 @@ public class FreeBoardController {
 			return mv;
 		}
 		
+		// 수정 화면에서 첨부 파일 삭제 후 다시 비밀번호를 입력하지 않고 수정 화면으로 돌아오기 위해
 		String pass = "";
-		if(params.containsKey("pass"))
-			pass = params.get("pass");
+		if(params.containsKey("pass")) pass = params.get("pass");
 
 		String userId = String.valueOf(session.getAttribute("userId"));
 		String password = params.get("password");
@@ -287,7 +285,7 @@ public class FreeBoardController {
 		return mv;
 	}
 	
-	@RequestMapping("/free/doUpdate.do")
+	@RequestMapping("/free/doUpdate.do")	// 수정 완료한 글 저장
 	public ModelAndView doUpdate(@RequestParam HashMap<String, String> params, 
 			HttpSession session, MultipartHttpServletRequest mReq) {
 		log.debug("/free/doUpdate.do - params : " + params);
@@ -300,7 +298,7 @@ public class FreeBoardController {
 			return mv;
 		}
 		int seq = Integer.parseInt(params.get("seq"));
-		FreeBoard board = service.findBySeq(seq);				// 원래 글 정보 가져오기
+		FreeBoard board = service.findBySeq(seq);			// 원래 글 정보 가져오기
 
 		List<MultipartFile> files = null;
 		if(board.getHasFile().equals("0")) {			
@@ -335,7 +333,7 @@ public class FreeBoardController {
 		return mv;
 	}
 	
-	@RequestMapping("/free/writeComment.do")
+	@RequestMapping("/free/writeComment.do")	// 댓글 쓰기
 	public ModelAndView writeComment(HttpSession session, @RequestParam HashMap<String, String> params) {
 		log.debug("/free/writeComment.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -373,7 +371,7 @@ public class FreeBoardController {
 		return mv;
 	}
 	
-	@RequestMapping("/free/fileDownload.do")
+	@RequestMapping("/free/fileDownload.do")	// 글 읽기 화면에서 첨부파일 다운 받기
 	@ResponseBody
 	public byte[] fileDownload(@RequestParam HashMap<String, String> params, HttpServletResponse rep) {
 		log.debug("/free/fileDownload.do - params : " + params);
@@ -403,16 +401,16 @@ public class FreeBoardController {
 			int seq = service.delAttachedFile(attachSeq);
 			mv.addObject("seq", seq);
 			mv.addObject("currentPageNo", params.get("currentPageNo"));
-			mv.addObject("pass", true);	
+			mv.addObject("pass", true);	// 글 수정 화면으로 돌아갈 때 비밀 번호를 재입력 하지 않기 위해서
 			RedirectView rv = new RedirectView("/new_web/free/goUpdate.do");
-			mv.setView(rv);
+			mv.setView(rv);		// 삭제 후 글 수정 화면으로 돌아가기
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return mv;
 	}
 	
-	@RequestMapping("/free/delComment.do")
+	@RequestMapping("/free/delComment.do")		// 댓글 삭제
 	public ModelAndView delComment(HttpSession session, @RequestParam HashMap<String, String> params) {
 		log.debug("/free/delComment.do - params : " + params);
 		ModelAndView mv = new ModelAndView();

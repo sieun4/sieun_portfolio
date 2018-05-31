@@ -31,7 +31,7 @@ public class UserController {
 	@Autowired
 	LetterService lService;
 
-	@RequestMapping("/goLogin.do")
+	@RequestMapping("/goLogin.do")	// 로그인 화면으로
 	public ModelAndView index(HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 
@@ -45,7 +45,7 @@ public class UserController {
 		return mv;
 	}
 
-	@RequestMapping("/doLogin.do")
+	@RequestMapping("/doLogin.do")	// 로그인하기
 	public ModelAndView doLogin(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("login.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -77,7 +77,7 @@ public class UserController {
 				mv.addObject("nextLocation", "/goLogin.do");
 				return mv;
 			}
-		} catch (Exception e) {
+		} catch (Exception e) {	// 없는 아이디일 경우
 			switch (e.getMessage()) {
 			case "NOT_FOUND_USER_ID":
 				mv.setViewName("error/error");
@@ -89,7 +89,7 @@ public class UserController {
 		return mv;
 	}
 
-	@RequestMapping("/logout.do")
+	@RequestMapping("/logout.do")	// 로그아웃  하기
 	public ModelAndView logout(HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 
@@ -106,39 +106,40 @@ public class UserController {
 		return mv;
 	}
 
-	@RequestMapping("/goJoin.do")
+	@RequestMapping("/goJoin.do")	// 회원가입 하러 가기
 	public ModelAndView goJoin(@RequestParam HashMap<String, String> params, HttpSession session) {
-		log.debug("/goJoin.do - params : " + params); // 파라미터 출력해보기
+		log.debug("/goJoin.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
 
-		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
+		if (session.getAttribute("userId") != null) { 	// 로그인 한 경우	
 			mv.setViewName("error/error");
 			mv.addObject("msg", "회원가입은 로그아웃 후 이용해주세요 :)");
 			mv.addObject("nextLocation", "/index.do");
 			return mv;
 		}							
-		mv.setViewName("user/join");	// 로그인 안 한 경우 회원가입 페이지로
+		mv.setViewName("user/join");	// 로그인 안 한 경우 정상적으로 회원가입 페이지로
 		return mv;
 	}
 
-	@RequestMapping("/doJoin.do")
+	@RequestMapping("/doJoin.do")	// 회원가입 하기
 	public ModelAndView doJoin(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/doJoin.do - params : " + params); // 파라미터 출력해보기
 		ModelAndView mv = new ModelAndView();
 
-		if (session.getAttribute("userId") != null) { 	// 이미 로그인 한 경우	
+		if (session.getAttribute("userId") != null) { 	// 로그인 한 경우	
 			mv.setViewName("error/error");
 			mv.addObject("msg", "회원가입은 로그아웃 후 이용해주세요 :)");
 			mv.addObject("nextLocation", "/index.do");
 			return mv;
 		}	
-		User user = new User();
+		
+		User user = new User();			// 회원정보 저장하기
 		user.setUserId(params.get("userId"));
 		user.setUserName(params.get("userName"));
 		user.setUserPw(params.get("userPw"));
 		user.setNickname(params.get("nickname"));
 
-		Letter letter = new Letter();	// 가입 축하 편지 보내기
+		Letter letter = new Letter();	// 회원가입 축하 편지 보내기
 		letter.setFromId("SIEUN");
 		letter.setFromNickname("관리자");
 		letter.setText("회원가입을 축하드립니다! <br>계속해서 다양한 기능들을 업데이트할 예정이니 많이 이용해주세요 :D");
@@ -157,7 +158,7 @@ public class UserController {
 		}		
 		mv.setViewName("error/error");
 		mv.addObject("msg", "가입이 완료되었습니다! 로그인 후 다양한 기능을 이용해 보세요 :)");
-		mv.addObject("nextLocation", "/goLogin.do");
+		mv.addObject("nextLocation", "/goLogin.do");	// 로그인 화면으로
 		return mv;
 	}
 
@@ -168,12 +169,12 @@ public class UserController {
 		
 		String userId = params.get("userId");
 		
-		for(int i=0; i<userId.length(); i++) {
+		for(int i=0; i<userId.length(); i++) {	// ID로 영문 대문자는 사용할 수 없음
 			if('A' <= userId.charAt(i) && userId.charAt(i) <= 'Z')
 				return 2;
 		}
 		
-		return service.chkId(userId);
+		return service.chkId(userId);	// 중복 되는 ID가 있는지(1 또는 0) 결과 반환
 	}
 
 	@RequestMapping("/user/getInfo.do")	// 마이 페이지 (본인 정보 조회)
@@ -198,7 +199,7 @@ public class UserController {
 
 	@RequestMapping("/user/delete.do")			// 탈퇴하기
 	public ModelAndView quitService(@RequestParam HashMap<String, String> params, HttpSession session) {
-		log.debug("/user/delete.do - params : " + params); // 파라미터 출력해보기
+		log.debug("/user/delete.do - params : " + params); 
 		ModelAndView mv = new ModelAndView();
 
 		if (session.getAttribute("userId") == null) { 	// 로그인 안 한 경우	
@@ -213,7 +214,7 @@ public class UserController {
 
 		try {						// 탈퇴 메서드 수행
 			service.delete(userId, comparePw);
-		} catch(Exception e) {		// 비밀번호가 맞지 않으면 다시 사용자 정보로
+		} catch(Exception e) {		// 비밀번호가 맞지 않거나 오류 발생시 다시 마이 페이지로
 			RedirectView rv = new RedirectView("/new_web/user/getInfo.do");
 			String msg = "";
 			switch(e.getMessage()) {
@@ -231,13 +232,13 @@ public class UserController {
 		session.invalidate(); // 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
 		mv.setViewName("error/error");
 		mv.addObject("msg", "정상적으로 탈퇴되었습니다 :)");
-		mv.addObject("nextLocation", "/goJoin.do");	// 탈퇴 화면으로
+		mv.addObject("nextLocation", "/goJoin.do");	// 탈퇴가 완료되면 회원가입 화면으로
 		return mv;
 	}
 
-	@RequestMapping("/user/goEdit.do")
+	@RequestMapping("/user/goEdit.do")	// 개인 정보 수정하러 가기
 	public ModelAndView goEdit(@RequestParam HashMap<String, String> params, HttpSession session) {
-		log.debug("/user/goEdit.do - params : " + params); // 파라미터 출력해보기
+		log.debug("/user/goEdit.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
 
 		if(session.getAttribute("userId") == null) { 		// 로그인 안 한 경우	
@@ -252,7 +253,7 @@ public class UserController {
 		User user;
 		try {						// 수정할 정보 불러오기
 			user = service.goEdit(userId, comparePw);
-		} catch(Exception e) {		// 비밀번호가 맞지 않으면 다시 사용자 정보로
+		} catch(Exception e) {		// 비밀번호가 맞지 않으면 다시 마이 페이지로
 			RedirectView rv = new RedirectView("/new_web/user/getInfo.do");
 			mv.addObject("msg", "비밀번호가 일치하지 않습니다.");
 			mv.addObject("userId", userId);
@@ -260,13 +261,13 @@ public class UserController {
 			return mv;
 		}
 		mv.addObject("user", user);
-		mv.setViewName("user/editUser");
+		mv.setViewName("user/editUser");	// 개인 정보 수정 페이지로
 		return mv;
 	}
 	
-	@RequestMapping("/user/doEdit.do")
+	@RequestMapping("/user/doEdit.do")	// 개인 정보 수정하기
 	public ModelAndView doEdit(@RequestParam HashMap<String, String> params, HttpSession session) {
-		log.debug("/user/doEdit.do - params : " + params); // 파라미터 출력해보기
+		log.debug("/user/doEdit.do - params : " + params); 
 		ModelAndView mv = new ModelAndView();
 
 		User user = service.getUser(String.valueOf(session.getAttribute("userId")));
@@ -286,22 +287,22 @@ public class UserController {
 		session.invalidate(); 		// 세선을 유효하지 않은 상태로 만들어서 정보가 다 사라짐
 		mv.setViewName("error/error");
 		mv.addObject("msg", "수정이 완료되었습니다. 다시 로그인 해주세요 :)");
-		mv.addObject("nextLocation", "/goLogin.do");	// 로그인 화면으로
+		mv.addObject("nextLocation", "/goLogin.do");	// 개인 정보 수정 완료 후 로그인 화면으로
 		return mv;
 	}
 	
-	@RequestMapping("/user/list.do")
+	@RequestMapping("/user/list.do")	// 회원 리스트 화면으로 (관리자만)
 	public ModelAndView list(@RequestParam Map<String, String> params, HttpSession session) {
 		log.debug("/user/list.do params : " + params);
 		ModelAndView mv = new ModelAndView();
 		
-		if(session.getAttribute("use rId") == null) { 		// 로그인 안 한 경우	
+		if(session.getAttribute("userId") == null) { 		// 로그인 안 한 경우	
 			mv.setViewName("error/error");
 			mv.addObject("msg", "로그인 후 이용해 주세요 :)");
 			mv.addObject("nextLocation", "/goLogin.do");
 			return mv;
 		}
-		if(!session.getAttribute("isAdmin").equals("1")) {	// 관리자가 아닌 경우		
+		if(!session.getAttribute("isAdmin").equals("1")) {	// 관리자가 아닌 경우 조회 불가	
 			mv.setViewName("error/error");
 			mv.addObject("msg", "권한이 없습니다 ㅠㅠ");
 			mv.addObject("nextLocation", "/index.do");
@@ -311,7 +312,7 @@ public class UserController {
 		return mv;
 	}
 	
-	@RequestMapping("/user/getUserData.do")
+	@RequestMapping("/user/getUserData.do")		// 회원 리스트에서 보여질 데이터 (관리자만)
 	@ResponseBody	// 비동기
 	public HashMap<String, Object> getUserData(@RequestParam HashMap<String, String> params) {
 		log.debug("/user/getUserData.do params : " + params);

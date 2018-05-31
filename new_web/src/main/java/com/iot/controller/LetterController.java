@@ -23,7 +23,7 @@ public class LetterController {
 	@Autowired
 	LetterService service;
 
-	@RequestMapping("/letter/goWrite.do")
+	@RequestMapping("/letter/goWrite.do")	// 편지 쓰기 화면으로 
 	public ModelAndView goWrite(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/letter/goWrite.do - params : " + params);
 
@@ -35,13 +35,13 @@ public class LetterController {
 			mv.addObject("msg", "로그인 후 이용해주세요 :)");
 			return mv;
 		}
-		if(params.get("toId") != null)
-			mv.addObject("toId", String.valueOf(params.get("toId")));
+		
+		if(params.get("toId") != null) mv.addObject("toId", String.valueOf(params.get("toId")));
 		mv.setViewName("letter/write");
 		return mv;
 	}
 	
-	@RequestMapping("/letter/doWrite.do")
+	@RequestMapping("/letter/doWrite.do")	// 편지 작성 후 보내기
 	public ModelAndView doWrite(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/letter/doWrite.do - params : " + params);
 
@@ -78,7 +78,7 @@ public class LetterController {
 		return mv;
 	}
 	
-	@RequestMapping("/letter/list.do")
+	@RequestMapping("/letter/list.do")	// 받은/보낸편지함 (편지 목록)
 	public ModelAndView list(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/letter/list.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -92,15 +92,12 @@ public class LetterController {
 		
 		// jsp에서 보낸 파라미터를 HashMap으로 받음
 		// jsp에서 값을 보내지 않으면 currentPageNo의 if문이 실행되지 않음
-
 		// DAO로 보낼 파라미터
 		HashMap<String, Object> p = new HashMap<String, Object>();
 		p.put("searchType", params.get("searchType"));
 		p.put("searchText", params.get("searchText"));
-		if(params.get("toId") != null)
-			p.put("toId", params.get("toId"));
-		if(params.get("fromId") != null)
-			p.put("fromId", params.get("fromId"));
+		if(params.get("toId") != null) p.put("toId", params.get("toId"));
+		if(params.get("fromId") != null) p.put("fromId", params.get("fromId"));
 		
 		int totalArticle = service.count(p);		// 총 게시글 수
 		int pageArticle = 10;					// 한 페이지에 보여줄 게시글 수
@@ -116,11 +113,9 @@ public class LetterController {
 
 		int pageBlockSize = 10;	
 		// 시작 = (현재-1) / 블럭수 * 블럭수 + 1
-		int pageBlockStart = 
-				(currentPageNo - 1) / pageBlockSize * pageBlockSize + 1;	
+		int pageBlockStart = (currentPageNo - 1) / pageBlockSize * pageBlockSize + 1;	
 		// 종료 = (현재-1) / 블럭수 * 블럭수 + 블럭수
-		int pageBlockEnd = 
-				(currentPageNo - 1) / pageBlockSize * pageBlockSize + pageBlockSize;	
+		int pageBlockEnd = (currentPageNo - 1) / pageBlockSize * pageBlockSize + pageBlockSize;	
 		// 종료값이 총페이지수보다 크거나 같으면 총페이지수
 		pageBlockEnd = (pageBlockEnd >= totalPage) ? totalPage : pageBlockEnd; 
 
@@ -129,7 +124,6 @@ public class LetterController {
 		p.put("pageArticle", pageArticle);
 		
 		ArrayList<Letter> letter = service.list(p);
-		
 		mv.addObject("letter", letter);
 		mv.addObject("totalArticle", totalArticle);
 		mv.addObject("totalPage", totalPage);
@@ -140,18 +134,20 @@ public class LetterController {
 		mv.addObject("searchType", params.get("searchType"));
 		mv.addObject("searchText", params.get("searchText"));
 
-		if(params.get("toId") != null) {
+		if(params.get("toId") != null) {	// 받은 편지함
 			mv.addObject("toId", params.get("toId"));
 			mv.setViewName("letter/toList");			
 		}
-		if(params.get("fromId") != null) {
+		
+		if(params.get("fromId") != null) {	// 보낸 편지함
 			mv.addObject("fromId", params.get("fromId"));
 			mv.setViewName("letter/fromList");			
 		}
+		
 		return mv;
 	}
 	
-	@RequestMapping("/letter/read.do")
+	@RequestMapping("/letter/read.do")	// 편지 읽기
 	public ModelAndView read(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/letter/read.do - params : " + params);
 		ModelAndView mv = new ModelAndView();
@@ -163,9 +159,7 @@ public class LetterController {
 			return mv;
 		}
 		
-		// 글번호
 		int seq = Integer.parseInt(params.get("seq"));
-
 		// 특정 편지 DTO
 		Letter letter = null;
 		try {
@@ -181,7 +175,7 @@ public class LetterController {
 		return mv;
 	}
 	
-	@RequestMapping("/letter/toDeveloper.do")
+	@RequestMapping("/letter/toDeveloper.do")	// 관리자에게 오류 제보하기
 	public ModelAndView toDeveloper(@RequestParam HashMap<String, String> params, HttpSession session) {
 		log.debug("/letter/toDeveloper.do - params : " + params);
 
