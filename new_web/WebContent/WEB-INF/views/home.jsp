@@ -21,13 +21,13 @@
 <body class="homepage">
 	<div id="page-wrapper">
 		<header class="major"> <c:if test="${count != 0}">
-			<h2>
-				<font color="violet">${sessionScope.nickname }(${sessionScope.userId })</font>님에게
-				<font color="red">${count }</font>건의 새편지가 도착했어요!
+			<h2><p></p>
+				<font color="skyblue">${sessionScope.nickname }(${sessionScope.userId })</font>님에게
+				<font color="red">${count }</font>건의 새편지가 도착했어요!<p></p>
 			</h2>
-			<!-- 				<a class="button" -->
-			<%-- 					href='<c:url value="/letter/list.do?toId=${sessionScope.userId}"/>'>편지 --%>
-			<!-- 					확인하러 가기</a> -->
+								<a class="button"
+								href='<c:url value="/letter/list.do?toId=${sessionScope.userId}"/>'>편지
+								확인하러 가기</a>
 		</c:if> </header>
 
 		<!-- Features 1 -->

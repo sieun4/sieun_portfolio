@@ -8,7 +8,7 @@
 	<select id="count" resultType="int">
 		SELECT COUNT(*) FROM iot.friend
 		WHERE user_id = #{userId}
-		<if	<!-- 검색 -->
+		<if	
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
 			OR
@@ -16,15 +16,15 @@
 			OR memo LIKE
 			CONCAT('%', #{searchText}, '%'))
 		</if>
-		<if	<!-- 친구 아이디로 검색 -->
+		<if	
 			test="(searchType != null and searchType == 'friendId') and searchText != ''">
 			AND friend_id LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if	<!-- 친구 이름으로 검색 -->
+		<if	
 			test="(searchType != null and searchType == 'friendName') and searchText != ''">
 			AND friend_name LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if	<!-- 메모로 검색 -->
+		<if	
 			test="(searchType != null and searchType == 'memo') and searchText != ''">
 			AND memo LIKE CONCAT('%', #{searchText}, '%')
 		</if>
@@ -34,7 +34,7 @@
 	<select id="list" parameterType="HashMap" resultType="HashMap">
 		SELECT * FROM iot.friend
 		WHERE user_id = #{userId}
-		<if <!-- 검색 -->
+		<if 
 			test="(searchType != null and searchType == 'all') and searchText != ''">
 			AND (friend_id LIKE CONCAT('%', #{searchText}, '%')
 			OR
@@ -42,15 +42,15 @@
 			OR memo LIKE
 			CONCAT('%', #{searchText}, '%'))
 		</if>
-		<if <!-- 친구 아이디로 검색 -->
+		<if 
 			test="(searchType != null and searchType == 'friendId') and searchText != ''">
 			AND friend_id LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if <!-- 친구 이름으로 검색 -->
+		<if 
 			test="(searchType != null and searchType == 'friendName') and searchText != ''">
 			AND friend_name LIKE CONCAT('%', #{searchText}, '%')
 		</if>
-		<if <!-- 메모로 검색 -->
+		<if 
 			test="(searchType != null and searchType == 'memo') and searchText != ''">
 			AND memo LIKE CONCAT('%', #{searchText}, '%')
 		</if>

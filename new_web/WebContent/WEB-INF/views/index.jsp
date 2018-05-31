@@ -106,11 +106,9 @@ var ctx = "<%=request.getContextPath()%>";
 						</ul></li>
 
 					<c:choose>
-						<!-- 로그인 했을 경우 -->
 						<c:when test="${sessionScope.userId != null}">
 							<li><a href="" onclick="doLogout()">로그 아웃</a></li>
 						</c:when>
-						<!-- 로그인 안 했을 경우 -->
 						<c:otherwise>
 							<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>
 						</c:otherwise>
@@ -123,9 +121,7 @@ var ctx = "<%=request.getContextPath()%>";
 			<section id="hero" class="container"> <header>
 			<h2>
 				<c:choose>
-					<!-- 로그인 안 했을 경우 -->
 					<c:when test="${sessionScope.userId == null }">로그인 후 다양한 기능들을 이용해보세요! :D</c:when>
-					<!-- 로그인 했을 경우 -->
 					<c:otherwise>
 						<c:out value="${sessionScope.nickname }" />(<c:out
 							value="${sessionScope.userId }" />)님 반갑습니다! :D
