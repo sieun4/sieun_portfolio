@@ -91,9 +91,7 @@ body {
 								<fieldset>
 									<legend>글쓰기</legend>
 
-									<c:if test="${msg != null }">
-								${msg }
-							</c:if>
+									<c:if test="${msg != null }"> ${msg } </c:if>
 
 									<!-- board write table -->
 									<table summary="표 내용은 글쓰기 박스입니다." class="board_write_table">
@@ -137,7 +135,8 @@ body {
 													<input type="file" name="file" /></td>
 											</tr>
 											<tr>
-												<th class="tright"><label for="board_write_tag">태그(,로 구분)</label></th>
+												<th class="tright"><label for="board_write_tag">태그(띄어쓰기로
+														구분)</label></th>
 												<td class="tleft"><input type="text" name="tag"
 													id="board_write_tag" title="태그 입력박스" class="input_550" />
 												</td>

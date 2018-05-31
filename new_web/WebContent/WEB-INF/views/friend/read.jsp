@@ -129,13 +129,13 @@ body {
 
 									<div class="btn_bottom">
 										<div class="btn_bottom_left">
-											<input type="button" onclick="goWrite()"
-												value="편지쓰기" title="편지쓰기" />
+											<input type="button" onclick="goWrite()" value="편지쓰기"
+												title="편지쓰기" />
 										</div>
 										<div class="btn_bottom_right">
 											<input type="button" onclick="goUpdate()" value="수정"
-												title="수정" /> <input type="button" onclick="doDelete(${friend.seq})"
-												value="삭제" title="삭제" />
+												title="수정" /> <input type="button"
+												onclick="doDelete(${friend.seq})" value="삭제" title="삭제" />
 										</div>
 									</div>
 									<!-- //board detail table -->

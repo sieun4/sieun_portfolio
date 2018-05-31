@@ -56,6 +56,7 @@ function writeComment(){
 	frm.method = 'POST';					// ""와 ''는 같음 (String 입력할 때)
 	frm.submit();
 }
+
 // 수정
 function goUpdate(){
 	var password = document.getElementById("password").value;
@@ -93,6 +94,7 @@ function doDelete(){
 		frm.submit();
 		}
 }
+
 	$(document).ready(function() {
 		//Tab
 		$("#tabs").tabs();
@@ -101,7 +103,7 @@ function doDelete(){
 </head>
 <body>
 	<div id="tabs" align="center">
-		<br/>자유게시판
+		<br />자유게시판
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">
@@ -114,8 +116,10 @@ function doDelete(){
 						<!-- board_area -->
 						<div class="board_area">
 							<form name="readForm">
+								
 								<input type="hidden" name="seq" value="${board.seq }" /> <input
 									type="hidden" name="currentPageNo" value="${currentPageNo }" />
+								
 								<fieldset>
 									<legend>자유게시판 글 읽기</legend>
 
@@ -197,9 +201,7 @@ function doDelete(){
 											</a>
 										</div>
 									</div>
-									<br />
-									<br />
-									<br />
+									<br /> <br /> <br />
 
 									<table>
 										<!-- 댓글 -->

@@ -6,23 +6,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>알림</title>
 <script type="text/javascript">
-function init(){
-	var msg = '${msg}';
-	if(msg != ''){
-		alert(msg);
+	function init() {
+		var msg = '${msg}';
+		if (msg != '') {
+			alert(msg);
+		}
+		var contextPath = '${pageContext.request.contextPath}';
+		var nextLocation = '${nextLocation}';
+		console.log('contextPath : ' + contextPath);
+		console.log('nextLocation : ' + nextLocation);
+		console.log('next URL : ' + (contextPath + nextLocation));
+		if (nextLocation != null && nextLocation != '') {
+			window.top.location.href = contextPath + nextLocation;
+		}
 	}
-	var contextPath = '${pageContext.request.contextPath}';
-	var nextLocation = '${nextLocation}';
-	console.log('contextPath : ' + contextPath);
-	console.log('nextLocation : ' + nextLocation);
-	console.log('next URL : ' + (contextPath + nextLocation));
-	if(nextLocation != null && nextLocation != ''){
-		window.top.location.href = contextPath + nextLocation;
-	}
-}
 </script>
 </head>
 <body onload="init()">
-
 </body>
 </html>

@@ -106,7 +106,6 @@ body {
 
 								<!--paginate start -->
 								<c:if test="${result.size() != 0 }">
-
 									<div class="paginate">
 
 										<c:if test="${currentPageNo != 1}">
@@ -136,6 +135,7 @@ body {
 										<c:if test="${currentPageNo != totalPage}">
 											<a href="/new_web/friend/list.do?letter=letter&currentPageNo=${totalPage }">끝으로</a>
 										</c:if>
+										
 									</div>
 								</c:if>
 								<!--//paginate end -->

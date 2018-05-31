@@ -40,12 +40,12 @@ body {
 
 	// 답장
 	function goReply() {
-			var frm = document.readForm;
-			frm.action = "/new_web/letter/goWrite.do?toId=${letter.fromId }";
-			frm.method = "POST";
-			frm.submit();
+		var frm = document.readForm;
+		frm.action = "/new_web/letter/goWrite.do?toId=${letter.fromId }";
+		frm.method = "POST";
+		frm.submit();
 	}
-	
+
 	$(document).ready(function() {
 		//Tab
 		$("#tabs").tabs();
@@ -91,9 +91,10 @@ body {
 											</tr>
 											<tr>
 												<th class="tleft">보낸 사람</th>
-												<td class="tleft"><a href="/new_web/letter/goWrite.do?toId=${letter.fromId }"><c:out
-														value="${letter.fromNickname }" />(<c:out
-														value="${letter.fromId }" />)</a></td>
+												<td class="tleft"><a
+													href="/new_web/letter/goWrite.do?toId=${letter.fromId }"><c:out
+															value="${letter.fromNickname }" />(<c:out
+															value="${letter.fromId }" />)</a></td>
 											</tr>
 											<tr>
 												<td colspan="2" class="tleft">${letter.text }
@@ -108,8 +109,8 @@ body {
 									</table>
 									<br />
 									<c:if test="${msg != null }">
-									${msg }
-								</c:if>
+										${msg }
+									</c:if>
 									<br /> <br />
 
 									<!-- bottom button -->
@@ -119,8 +120,8 @@ body {
 												value="돌아가기" title="돌아가기" />
 										</div>
 										<div class="btn_bottom_right">
-											<input type="button" onclick="goReply()"
-												value="답장" title="답장" />
+											<input type="button" onclick="goReply()" value="답장"
+												title="답장" />
 										</div>
 									</div>
 									<!-- //bottom button -->

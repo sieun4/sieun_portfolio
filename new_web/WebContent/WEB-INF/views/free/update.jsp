@@ -77,7 +77,7 @@ function doDelete(attachSeq){	// 매개변수 데이터타입 필요 없음 (자
 </head>
 <body>
 	<div id="tabs" align="center">
-		<br/>자유게시판
+		<br />자유게시판
 		<div id="tabs-1">
 			<!-- wrap -->
 			<div id="wrap">

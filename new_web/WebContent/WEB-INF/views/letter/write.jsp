@@ -138,20 +138,17 @@ body {
 											<tr>
 												<th class="tright"><label for="board_write_toId">받는
 														사람 ID</label></th>
-												<td class="tleft">
-												<c:choose>
-													<c:when test="${toId != null}">
-														<input type="text" name="toId" id="board_write_toId" 
-															value="${toId }" title="받는 사람 ID 입력박스" class="input_100" />
-													</c:when>
-													<c:otherwise>
-														<input type="text" name="toId"
-														id="board_write_toId" title="받는 사람 ID 입력박스"
-														class="input_100" /> 
-													</c:otherwise>
-												</c:choose>
-												<input type="button"
-													onclick="popupOpen()" value="주소록" title="주소록" /></td>
+												<td class="tleft"><c:choose>
+														<c:when test="${toId != null}">
+															<input type="text" name="toId" id="board_write_toId"
+																value="${toId }" title="받는 사람 ID 입력박스" class="input_100" />
+														</c:when>
+														<c:otherwise>
+															<input type="text" name="toId" id="board_write_toId"
+																title="받는 사람 ID 입력박스" class="input_100" />
+														</c:otherwise>
+													</c:choose> <input type="button" onclick="popupOpen()" value="주소록"
+													title="주소록" /></td>
 											</tr>
 											<tr>
 												<th class="tright"><label for="board_write_title">제목</label></th>

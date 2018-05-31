@@ -26,8 +26,7 @@
 <script src='<c:url value="/resources/assets/js/main.js"/>'></script>
 
 <script type="text/javascript">
-var ctx = "<%=request.getContextPath()%>
-	";
+var ctx = "<%=request.getContextPath()%>";
 	jQuery(document).ready(function() {
 		// 초기 페이지 세팅
 		$("#demoFrame").attr("src", '<c:url value="/home.do" />');
@@ -107,11 +106,13 @@ var ctx = "<%=request.getContextPath()%>
 						</ul></li>
 
 					<c:choose>
+						<!-- 로그인 했을 경우 -->
 						<c:when test="${sessionScope.userId != null}">
-							<li><a href="" onclick="doLogout()">로그 아웃</a></li>				<!-- 로그인 했을 경우 -->
+							<li><a href="" onclick="doLogout()">로그 아웃</a></li>
 						</c:when>
+						<!-- 로그인 안 했을 경우 -->
 						<c:otherwise>
-							<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>	<!-- 로그인 안 했을 경우 -->
+							<li><a href='<c:url value="/goLogin.do"/>'>로그인/회원가입</a></li>
 						</c:otherwise>
 					</c:choose>
 				</ul>
@@ -122,7 +123,9 @@ var ctx = "<%=request.getContextPath()%>
 			<section id="hero" class="container"> <header>
 			<h2>
 				<c:choose>
+					<!-- 로그인 안 했을 경우 -->
 					<c:when test="${sessionScope.userId == null }">로그인 후 다양한 기능들을 이용해보세요! :D</c:when>
+					<!-- 로그인 했을 경우 -->
 					<c:otherwise>
 						<c:out value="${sessionScope.nickname }" />(<c:out
 							value="${sessionScope.userId }" />)님 반갑습니다! :D
@@ -135,7 +138,8 @@ var ctx = "<%=request.getContextPath()%>
 		<div align="center">
 			<br />
 			<iframe id="demoFrame" name="demoFrame" frameborder="0"
-				marginheight="0" marginwidth="0" style="width: 70%; height: 100%;" onload="resize(this)"></iframe>
+				marginheight="0" marginwidth="0" style="width: 70%; height: 100%;"
+				onload="resize(this)"></iframe>
 			<br />
 		</div>
 
@@ -175,7 +179,7 @@ var ctx = "<%=request.getContextPath()%>
 						<div align="center" class="12u">
 							이 페이지는 아래 항목을 이용하여 구현하였습니다.<br /> Spring Framework
 							4.3.14.RELEASE<br /> myBatis 3.4.1<br /> jUnit 4.12<br /> <br />
-							last update 2018. 04. 27 <br /> <br />
+							last update 2018. 05. 31 <br /> <br />
 							<section id="hero" class="6u 12u(narrower)"> <a
 								class="button">SIEUN</a>
 						</div>

@@ -95,7 +95,9 @@ body {
 						<!-- board_area -->
 						<div class="board_area">
 							<form name="readForm">
+								
 								<input type="hidden" id="seq" name="seq" value="${friend.seq }" />
+								
 								<fieldset>
 									<legend>친구 정보</legend>
 
@@ -109,8 +111,8 @@ body {
 										<tbody>
 											<tr>
 												<th>친구 아이디</th>
-												<td><input type="text" name="friendId"
-													id="friendId" readonly="readonly" value="${friend.friendId }"
+												<td><input type="text" name="friendId" id="friendId"
+													readonly="readonly" value="${friend.friendId }"
 													title="친구 아이디 입력박스" class="input_380" /></td>
 											</tr>
 											<tr>
@@ -121,19 +123,17 @@ body {
 											</tr>
 											<tr>
 												<th>메모</th>
-												<td><input type="text" name="memo"
-													id="memo" value="${friend.memo }"
-													title="메모 입력박스" class="input_380" /></td>
+												<td><input type="text" name="memo" id="memo"
+													value="${friend.memo }" title="메모 입력박스" class="input_380" /></td>
 											</tr>
 										</tbody>
 									</table>
 									<br />
 
 									<div class="btn_bottom">
-										
 										<div class="btn_bottom_right">
 											<input type="button" onclick="doUpdate()" value="완료"
-												title="완료" /> 
+												title="완료" />
 										</div>
 									</div>
 									<!-- //board detail table -->
