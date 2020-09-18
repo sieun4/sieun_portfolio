@@ -42,7 +42,6 @@
 					<header>
 					<h2>받은 편지함</h2>
 					</header>
-					<p>이곳엔 가장 최근에 받은 편지 5개가 보여질 예정이에요.</p>
 					<ul class="actions">
 						<li><a
 							href='<c:url value="/letter/list.do?toId=${sessionScope.userId}"/>'
@@ -57,7 +56,6 @@
 					<header>
 					<h2>자유게시판</h2>
 					</header>
-					<p>이곳엔 가장 최근에 올라온 게시글 5개가 보여질 예정이에요.</p>
 					<ul class="actions">
 						<li><a href='<c:url value="/free/list.do"/>' class="button"
 							target="demoFrame">자유게시판 바로가기</a></li>
@@ -67,16 +65,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- 		<div align="center"> -->
-		<!-- 			<p><br/><br/>저 여기있어요...★</p> -->
-		<!-- q = 원하는 주소 구글맵에서 찾아서 주소명넣으면 됨  -->
-		<!-- 			<iframe -->
-		<!-- 				src="https://www.google.com/maps/embed/v1/place?q=더조은IT 아카데미&amp;key=AIzaSyBSFRN6WWGYwmFi498qXXsD2UwkbmD74v4" -->
-		<!-- 				frameborder="0" scrolling="no" marginheight="0" marginwidth="0" -->
-		<!-- 				style="width: 50%; height: 300px;"></iframe> -->
-		<!-- 		</div> -->
-
 	</div>
 	<!-- Scripts -->
 

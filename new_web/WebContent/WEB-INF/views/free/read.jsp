@@ -173,7 +173,7 @@ function doDelete(){
 												<tr>
 													<th class="tright">비밀번호</th>
 													<td colspan="5" class="tleft"><input type="password"
-														name="password" id="password" title="비밀번호 입력박스"
+														name="password" id=""password title="비밀번호 입력박스"
 														class="input_100" /> <c:if test="${msg != null }">
 														${msg }
 														</c:if></td>
